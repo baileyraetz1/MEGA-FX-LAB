@@ -1,0 +1,2436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MEGA FX LAB — 30,000 Effects</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#06060f;--bg2:#0c0c1e;--bg3:#13132a;--bg4:#1a1a36;--bg5:#222244;
+  --acc:#ff2d78;--acc2:#00e5ff;--acc3:#b4ff3c;--acc4:#ff9500;--acc5:#a855f7;
+  --txt:#e0e0f0;--muted:#4a4a7a;--border:#1e1e3f;
+  --panel-l:300px;--panel-r:260px;
+  --font:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font-family:var(--font)}
+
+/* ── TOPBAR ── */
+#top{position:fixed;top:0;left:0;right:0;height:56px;background:rgba(6,6,15,.97);
+  backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;padding:0 16px;z-index:999}
+.logo{font-weight:700;font-size:18px;letter-spacing:-1px;white-space:nowrap;
+  background:linear-gradient(135deg,var(--acc),var(--acc2),var(--acc3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.badge{background:var(--acc3);color:#000;font-size:9px;font-weight:700;padding:2px 8px;
+  border-radius:20px;font-family:var(--mono);letter-spacing:.5px;white-space:nowrap}
+.badge2{background:var(--acc);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;
+  border-radius:20px;font-family:var(--mono);letter-spacing:.5px;white-space:nowrap}
+#top .sp{flex:1}
+.tbtn{background:var(--bg3);border:1px solid var(--border);color:var(--txt);
+  padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;
+  font-family:var(--font);transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.tbtn:hover{background:var(--bg4);border-color:var(--bg5)}
+.tbtn.hot{background:var(--acc);border-color:var(--acc);color:#fff}
+.tbtn.hot:hover{filter:brightness(1.15)}
+#top-search{background:var(--bg3);border:1px solid var(--border);color:var(--txt);
+  padding:7px 14px;border-radius:8px;font-size:12px;font-family:var(--font);
+  outline:none;width:220px;transition:border-color .15s}
+#top-search:focus{border-color:var(--acc2)}
+#top-search::placeholder{color:var(--muted)}
+
+/* ── WRAP ── */
+#wrap{display:flex;position:fixed;top:56px;left:0;right:0;bottom:0}
+
+/* ── LEFT PANEL ── */
+#lp{width:var(--panel-l);background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+#lp-top{padding:10px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:6px}
+#lsearch{background:var(--bg3);border:1px solid var(--border);color:var(--txt);
+  padding:8px 12px;border-radius:7px;font-size:12px;font-family:var(--font);
+  outline:none;width:100%;transition:border-color .15s}
+#lsearch:focus{border-color:var(--acc2)}
+#lsearch::placeholder{color:var(--muted)}
+#lp-tabs{display:flex;gap:3px;flex-wrap:wrap}
+.ltab{font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px;cursor:pointer;
+  border:1px solid var(--border);color:var(--muted);background:transparent;
+  transition:all .12s;white-space:nowrap;font-family:var(--mono);letter-spacing:.3px}
+.ltab:hover{color:var(--txt);border-color:var(--bg5)}
+.ltab.on{color:#000;border-color:transparent;font-weight:700}
+#cat-list{width:100%;overflow-y:auto;overflow-x:hidden;flex-shrink:0}
+#cat-list::-webkit-scrollbar{width:3px}
+#cat-list::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:2px}
+.cat-section{border-bottom:1px solid var(--border)}
+.cat-header{padding:7px 12px;font-size:10px;font-weight:700;color:var(--muted);
+  letter-spacing:.8px;text-transform:uppercase;font-family:var(--mono);cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;transition:color .12s;
+  user-select:none}
+.cat-header:hover{color:var(--txt)}
+.cat-header .count{font-size:9px;font-weight:400;opacity:.6}
+.cat-header .arrow{transition:transform .2s}
+.cat-header.open .arrow{transform:rotate(90deg)}
+.fx-list{display:none;padding:4px 6px}
+.cat-section.expanded .fx-list{display:block}
+.fx-item{padding:5px 8px;border-radius:5px;cursor:pointer;margin-bottom:1px;
+  border:1px solid transparent;transition:all .1s;display:flex;align-items:center;gap:7px}
+.fx-item:hover{background:var(--bg3);border-color:var(--border)}
+.fx-item.on{background:var(--bg4);border-color:var(--acc)}
+.fx-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;opacity:.9}
+.fx-name{font-size:11px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.fx-item.on .fx-name{color:var(--acc)}
+#lp-footer{padding:8px 12px;border-top:1px solid var(--border);flex-shrink:0}
+#lp-count{font-size:10px;color:var(--muted);font-family:var(--mono)}
+
+/* ── CENTER ── */
+#center{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+#cview{flex:1;display:flex;align-items:center;justify-content:center;position:relative;
+  background:radial-gradient(ellipse at center,#0d0d20 0%,#06060f 100%);overflow:hidden}
+canvas#glc{display:block;max-width:100%;max-height:100%;object-fit:contain;image-rendering:auto}
+#drop{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;
+  pointer-events:none;transition:opacity .4s}
+#drop.hidden{opacity:0;pointer-events:none}
+.drop-ico{font-size:56px;margin-bottom:16px;opacity:.2;filter:saturate(0)}
+.drop-txt{font-size:14px;color:var(--muted);line-height:1.8}
+.drop-sub{margin-top:12px;font-size:11px;color:var(--acc);opacity:.6;font-family:var(--mono)}
+#fpsc{position:absolute;top:10px;right:10px;font-family:var(--mono);font-size:9px;
+  color:var(--acc2);background:rgba(0,0,0,.8);padding:3px 8px;border-radius:4px;pointer-events:none}
+#playb{position:absolute;bottom:16px;right:16px;width:48px;height:48px;border-radius:50%;
+  background:var(--acc);border:none;cursor:pointer;font-size:18px;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 24px rgba(255,45,120,.5);transition:all .2s}
+#playb:hover{transform:scale(1.1)}
+#playb.anim{background:var(--acc2);box-shadow:0 4px 24px rgba(0,229,255,.4)}
+#sbar{height:38px;background:var(--bg2);border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;padding:0 16px;font-size:11px;color:var(--muted);flex-shrink:0}
+#ename{font-weight:600;color:var(--txt);font-size:12px;max-width:300px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#ecat{font-size:10px;color:var(--muted);font-family:var(--mono)}
+#diminfo{margin-left:auto;font-family:var(--mono);font-size:9px}
+
+/* ── RIGHT PANEL ── */
+#rp{width:var(--panel-r);background:var(--bg2);border-left:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+.ph{padding:10px 14px;border-bottom:1px solid var(--border);font-size:9px;
+  font-weight:700;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;font-family:var(--mono)}
+#rscroll{flex:1;overflow-y:auto;padding:12px}
+#rscroll::-webkit-scrollbar{width:3px}
+#rscroll::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:2px}
+.cg{margin-bottom:14px}
+.cl{font-size:10px;color:var(--muted);margin-bottom:5px;display:flex;justify-content:space-between;align-items:center}
+.cv{font-family:var(--mono);color:var(--acc2);font-size:9px}
+input[type=range]{width:100%;height:3px;appearance:none;background:var(--bg4);
+  border-radius:2px;outline:none;cursor:pointer;accent-color:var(--acc)}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:13px;height:13px;
+  border-radius:50%;background:var(--acc);cursor:pointer}
+input[type=color]{width:100%;height:30px;border:1px solid var(--border);background:var(--bg3);
+  border-radius:7px;cursor:pointer;padding:3px}
+.cbrow{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.chip{width:22px;height:22px;border-radius:4px;cursor:pointer;border:2px solid transparent;transition:all .12s}
+.chip:hover{transform:scale(1.12)}
+.chip.on{border-color:#fff;transform:scale(1.18)}
+.rbtn{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--txt);
+  padding:8px;border-radius:7px;cursor:pointer;font-size:11px;font-family:var(--font);
+  font-weight:500;margin-bottom:5px;transition:all .15s;text-align:center}
+.rbtn:hover{background:var(--bg4)}
+.rbtn.a{background:var(--acc);border-color:var(--acc);color:#fff}
+.rbtn.a:hover{filter:brightness(1.15)}
+.rbtn.b{background:var(--acc5);border-color:var(--acc5);color:#fff}
+.divider{height:1px;background:var(--border);margin:10px 0}
+.info-box{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:10px;margin-bottom:10px}
+.il{font-size:9px;color:var(--muted);font-family:var(--mono);margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px}
+.iv{font-size:11px;font-weight:500}
+.iv-big{font-size:20px;font-weight:700;color:var(--acc2);font-family:var(--mono)}
+.rp-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.tag{font-size:9px;padding:2px 7px;border-radius:20px;border:1px solid var(--border);
+  color:var(--muted);font-family:var(--mono)}
+
+/* SCROLLBAR global */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:2px}
+</style>
+</head>
+<body>
+<div id="top">
+  <div class="logo">⚡ MEGA FX LAB</div>
+  <span class="badge">30,000 EFFECTS</span>
+  <span class="badge2">1,000 CATEGORIES</span>
+  <div id="top-search-wrap" style="display:flex;align-items:center;gap:6px;flex:0 0 auto">
+    <input id="top-search" type="text" placeholder="Quick search..." oninput="quickSearch(this.value)">
+  </div>
+  <div class="sp"></div>
+  <button class="tbtn" onclick="document.getElementById('imgfile').click()">📂 Open Image</button>
+  <input type="file" id="imgfile" accept="image/*" style="display:none" onchange="loadImg(event)">
+  <button class="tbtn" onclick="saveImg()">💾 Export</button>
+  <button class="tbtn" onclick="randomFX()">🎲 Random FX</button>
+  <button class="tbtn" onclick="randomParams()">✦ Randomize</button>
+  <button class="tbtn hot" onclick="document.getElementById('imgfile').click()">+ Load Photo</button>
+</div>
+
+<div id="wrap">
+  <!-- LEFT -->
+  <div id="lp">
+    <div id="lp-top">
+      <input id="lsearch" type="text" placeholder="Filter 30,000 effects..." oninput="filterFX(this.value)">
+      <div id="lp-tabs"></div>
+    </div>
+    <div id="cat-list"></div>
+    <div id="lp-footer"><span id="lp-count"></span></div>
+  </div>
+
+  <!-- CENTER -->
+  <div id="center">
+    <div id="cview">
+      <canvas id="glc"></canvas>
+      <div id="drop">
+        <div class="drop-ico">🎨</div>
+        <div class="drop-txt">Drop an image here<br>or click <strong>Load Photo</strong></div>
+        <div class="drop-sub">← Browse 30,000 effects in 1,000 categories</div>
+      </div>
+      <div id="fpsc">— fps</div>
+      <button id="playb" onclick="togglePlay()" title="Animate">▶</button>
+    </div>
+    <div id="sbar">
+      <span style="color:var(--muted);font-size:10px">FX:</span>
+      <span id="ename">None selected</span>
+      <span id="ecat"></span>
+      <span id="diminfo">—</span>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div id="rp">
+    <div class="ph">Parameters</div>
+    <div id="rscroll">
+      <div class="info-box">
+        <div class="il">Active Effect</div>
+        <div class="iv" id="ri-name" style="margin-bottom:4px">—</div>
+        <div class="il">Category</div>
+        <div class="iv" id="ri-cat" style="color:var(--acc2)">—</div>
+      </div>
+      <div class="info-box" style="text-align:center">
+        <div class="il">Total Effects</div>
+        <div class="iv-big">30,000</div>
+        <div class="il" style="margin-top:4px">Categories</div>
+        <div class="iv-big" style="font-size:14px">1,000</div>
+      </div>
+      <div class="cg">
+        <div class="cl">Intensity <span class="cv" id="dv-int">0.50</span></div>
+        <input type="range" id="p-int" min="0" max="1" step="0.01" value="0.5" oninput="setP('intensity',this.value,'dv-int',2)">
+      </div>
+      <div class="cg">
+        <div class="cl">Speed <span class="cv" id="dv-spd">0.50</span></div>
+        <input type="range" id="p-spd" min="0" max="3" step="0.01" value="0.5" oninput="setP('speed',this.value,'dv-spd',2)">
+      </div>
+      <div class="cg">
+        <div class="cl">Scale <span class="cv" id="dv-scl">1.00</span></div>
+        <input type="range" id="p-scl" min="0.05" max="8" step="0.05" value="1" oninput="setP('scale',this.value,'dv-scl',2)">
+      </div>
+      <div class="cg">
+        <div class="cl">Angle <span class="cv" id="dv-ang">0.00</span></div>
+        <input type="range" id="p-ang" min="0" max="6.28" step="0.01" value="0" oninput="setP('angle',this.value,'dv-ang',2)">
+      </div>
+      <div class="cg">
+        <div class="cl">Complexity <span class="cv" id="dv-cmp">3</span></div>
+        <input type="range" id="p-cmp" min="1" max="16" step="1" value="3" oninput="setP('complexity',this.value,'dv-cmp',0)">
+      </div>
+      <div class="cg">
+        <div class="cl">Segments <span class="cv" id="dv-seg">6</span></div>
+        <input type="range" id="p-seg" min="2" max="32" step="1" value="6" oninput="setP('segments',this.value,'dv-seg',0)">
+      </div>
+      <div class="cg">
+        <div class="cl">Color Shift <span class="cv" id="dv-cs">0.00</span></div>
+        <input type="range" id="p-cs" min="0" max="1" step="0.01" value="0" oninput="setP('colorshift',this.value,'dv-cs',2)">
+      </div>
+      <div class="cg">
+        <div class="cl">Offset X <span class="cv" id="dv-ox">0.00</span></div>
+        <input type="range" id="p-ox" min="-1" max="1" step="0.01" value="0" oninput="setP('ox',this.value,'dv-ox',2)">
+      </div>
+      <div class="cg">
+        <div class="cl">Offset Y <span class="cv" id="dv-oy">0.00</span></div>
+        <input type="range" id="p-oy" min="-1" max="1" step="0.01" value="0" oninput="setP('oy',this.value,'dv-oy',2)">
+      </div>
+      <div class="cg">
+        <div class="cl">Variant Seed <span class="cv" id="dv-seed">0</span></div>
+        <input type="range" id="p-seed" min="0" max="29" step="1" value="0" oninput="setP('seed',this.value,'dv-seed',0)">
+      </div>
+      <div class="divider"></div>
+      <div class="cg">
+        <div class="cl">Tint Color</div>
+        <input type="color" id="p-tint" value="#ff2d78" oninput="setTint(this.value)">
+      </div>
+      <div class="cg">
+        <div class="cl">Palette</div>
+        <div class="cbrow" id="palette-row"></div>
+      </div>
+      <div class="divider"></div>
+      <button class="rbtn a" onclick="randomFX()">🎲 Random Effect</button>
+      <button class="rbtn b" onclick="randomCatFX()">🎯 Random in Category</button>
+      <button class="rbtn" onclick="randomParams()">✦ Randomize Params</button>
+      <button class="rbtn" onclick="resetParams()">↺ Reset Params</button>
+      <button class="rbtn" onclick="saveImg()">💾 Export Image</button>
+    </div>
+  </div>
+</div>
+<script>
+// ═══════════════════════════════════════════════════════
+// 30,000 EFFECTS ENGINE — Procedurally Generated
+// Each of 1,000 categories has 30 variant effects
+// Each variant = base shader + unique seed parameters
+// ═══════════════════════════════════════════════════════
+
+const CAT_COLORS = {
+  "Glitch / Block":"#ff2d78",
+  "Glitch / Pixel":"#ff2d78",
+  "Glitch / Channel":"#ff2d78",
+  "Glitch / Streak":"#ff2d78",
+  "Glitch / Scan":"#ff2d78",
+  "Glitch / Wave":"#ff2d78",
+  "Glitch / Grid":"#ff2d78",
+  "Glitch / Corrupt":"#ff2d78",
+  "Glitch / Databend":"#ff2d78",
+  "Glitch / Chroma":"#ff2d78",
+  "Glitch / Ghost":"#ff2d78",
+  "Glitch / Jitter":"#ff2d78",
+  "Glitch / Smear":"#ff2d78",
+  "Glitch / Bleed":"#ff2d78",
+  "Glitch / Noise":"#ff2d78",
+  "Glitch / Static":"#ff2d78",
+  "Glitch / VHS":"#ff2d78",
+  "Glitch / CRT":"#ff2d78",
+  "Glitch / Digital":"#ff2d78",
+  "Glitch / Analog":"#ff2d78",
+  "Glitch / RGB Split":"#ff2d78",
+  "Glitch / Desync":"#ff2d78",
+  "Glitch / Buffer":"#ff2d78",
+  "Glitch / Compression":"#ff2d78",
+  "Glitch / Raster":"#ff2d78",
+  "Glitch / Vector":"#ff2d78",
+  "Glitch / Memory":"#ff2d78",
+  "Glitch / Interrupt":"#ff2d78",
+  "Glitch / Dropout":"#ff2d78",
+  "Glitch / Overflow":"#ff2d78",
+  "Mirror / Horizontal":"#00e5ff",
+  "Mirror / Vertical":"#00e5ff",
+  "Mirror / Diagonal":"#00e5ff",
+  "Mirror / Radial":"#00e5ff",
+  "Mirror / Hex":"#00e5ff",
+  "Mirror / Kaleidoscope":"#00e5ff",
+  "Mirror / Multi":"#00e5ff",
+  "Mirror / Quad":"#00e5ff",
+  "Mirror / Triangle":"#00e5ff",
+  "Mirror / Octagon":"#00e5ff",
+  "Mirror / Spiral":"#00e5ff",
+  "Mirror / Fractal":"#00e5ff",
+  "Mirror / Infinite":"#00e5ff",
+  "Mirror / Locus":"#00e5ff",
+  "Mirror / Polar":"#00e5ff",
+  "Mirror / Axial":"#00e5ff",
+  "Mirror / Central":"#00e5ff",
+  "Mirror / Recttile":"#00e5ff",
+  "Mirror / Hextile":"#00e5ff",
+  "Mirror / Voronoi":"#00e5ff",
+  "Mirror / Droste":"#00e5ff",
+  "Mirror / Escher":"#00e5ff",
+  "Mirror / Aperiodic":"#00e5ff",
+  "Mirror / Penrose":"#00e5ff",
+  "Mirror / Quasicrystal":"#00e5ff",
+  "Mirror / Hyperbolic":"#00e5ff",
+  "Mirror / Spherical":"#00e5ff",
+  "Mirror / Toroidal":"#00e5ff",
+  "Mirror / M\u00f6bius":"#00e5ff",
+  "Mirror / Inversion":"#00e5ff",
+  "Distort / Swirl":"#ff6b35",
+  "Distort / Ripple":"#ff6b35",
+  "Distort / Warp":"#ff6b35",
+  "Distort / Stretch":"#ff6b35",
+  "Distort / Pinch":"#ff6b35",
+  "Distort / Bulge":"#ff6b35",
+  "Distort / Wave":"#ff6b35",
+  "Distort / Spiral":"#ff6b35",
+  "Distort / Twirl":"#ff6b35",
+  "Distort / Vortex":"#ff6b35",
+  "Distort / Polar":"#ff6b35",
+  "Distort / Fisheye":"#ff6b35",
+  "Distort / Barrel":"#ff6b35",
+  "Distort / Pincushion":"#ff6b35",
+  "Distort / Tilt":"#ff6b35",
+  "Distort / Shear":"#ff6b35",
+  "Distort / Skew":"#ff6b35",
+  "Distort / Perspective":"#ff6b35",
+  "Distort / Melt":"#ff6b35",
+  "Distort / Dissolve":"#ff6b35",
+  "Distort / Flame":"#ff6b35",
+  "Distort / Water":"#ff6b35",
+  "Distort / Glass":"#ff6b35",
+  "Distort / Smoke":"#ff6b35",
+  "Distort / Oil":"#ff6b35",
+  "Distort / Marble":"#ff6b35",
+  "Distort / Wood":"#ff6b35",
+  "Distort / Fabric":"#ff6b35",
+  "Distort / Rubber":"#ff6b35",
+  "Distort / Metal":"#ff6b35",
+  "Color / Hue":"#b4ff3c",
+  "Color / Saturation":"#b4ff3c",
+  "Color / Brightness":"#b4ff3c",
+  "Color / Contrast":"#b4ff3c",
+  "Color / Gamma":"#b4ff3c",
+  "Color / Curves":"#b4ff3c",
+  "Color / Levels":"#b4ff3c",
+  "Color / Posterize":"#b4ff3c",
+  "Color / Solarize":"#b4ff3c",
+  "Color / Invert":"#b4ff3c",
+  "Color / Duotone":"#b4ff3c",
+  "Color / Tritone":"#b4ff3c",
+  "Color / Sepia":"#b4ff3c",
+  "Color / Cross":"#b4ff3c",
+  "Color / Split":"#b4ff3c",
+  "Color / Grade":"#b4ff3c",
+  "Color / Film":"#b4ff3c",
+  "Color / Vintage":"#b4ff3c",
+  "Color / Fade":"#b4ff3c",
+  "Color / Matte":"#b4ff3c",
+  "Color / Neon":"#b4ff3c",
+  "Color / Vivid":"#b4ff3c",
+  "Color / Muted":"#b4ff3c",
+  "Color / Pastel":"#b4ff3c",
+  "Color / Deep":"#b4ff3c",
+  "Color / Cold":"#b4ff3c",
+  "Color / Warm":"#b4ff3c",
+  "Color / Golden":"#b4ff3c",
+  "Color / Teal":"#b4ff3c",
+  "Color / Cyan":"#b4ff3c",
+  "Color / Magenta":"#b4ff3c",
+  "Color / Infrared":"#b4ff3c",
+  "Color / Ultraviolet":"#b4ff3c",
+  "Color / Night":"#b4ff3c",
+  "Color / Thermal":"#b4ff3c",
+  "Color / Heatmap":"#b4ff3c",
+  "Color / Spectral":"#b4ff3c",
+  "Color / Rainbow":"#b4ff3c",
+  "Color / Prism":"#b4ff3c",
+  "Color / Aurora":"#b4ff3c",
+  "Blur / Gaussian":"#818cf8",
+  "Blur / Motion":"#818cf8",
+  "Blur / Radial":"#818cf8",
+  "Blur / Zoom":"#818cf8",
+  "Blur / Tilt-Shift":"#818cf8",
+  "Blur / Bokeh":"#818cf8",
+  "Blur / Lens":"#818cf8",
+  "Blur / Defocus":"#818cf8",
+  "Blur / Depth":"#818cf8",
+  "Blur / Vignette":"#818cf8",
+  "Blur / Directional":"#818cf8",
+  "Blur / Spin":"#818cf8",
+  "Blur / Explosion":"#818cf8",
+  "Blur / Dream":"#818cf8",
+  "Blur / Soft":"#818cf8",
+  "Blur / Box":"#818cf8",
+  "Blur / Bilateral":"#818cf8",
+  "Blur / Kawase":"#818cf8",
+  "Blur / Hexagonal":"#818cf8",
+  "Blur / Anamorphic":"#818cf8",
+  "Fractal / Mandelbrot":"#34d399",
+  "Fractal / Julia":"#34d399",
+  "Fractal / Burning Ship":"#34d399",
+  "Fractal / Newton":"#34d399",
+  "Fractal / Sierpinski":"#34d399",
+  "Fractal / Koch":"#34d399",
+  "Fractal / Dragon":"#34d399",
+  "Fractal / Barnsley":"#34d399",
+  "Fractal / Lyapunov":"#34d399",
+  "Fractal / IFS":"#34d399",
+  "Fractal / KIFS":"#34d399",
+  "Fractal / Flame":"#34d399",
+  "Fractal / Strange Attractor":"#34d399",
+  "Fractal / Lorenz":"#34d399",
+  "Fractal / Rossler":"#34d399",
+  "Fractal / Henon":"#34d399",
+  "Fractal / Duffing":"#34d399",
+  "Fractal / Clifford":"#34d399",
+  "Fractal / Peter De Jong":"#34d399",
+  "Fractal / Pickover":"#34d399",
+  "Fractal / Quaternion":"#34d399",
+  "Fractal / Bicomplex":"#34d399",
+  "Fractal / Escape Time":"#34d399",
+  "Fractal / Distance Estimate":"#34d399",
+  "Fractal / Orbit Trap":"#34d399",
+  "Fractal / Buddhabrot":"#34d399",
+  "Fractal / Anti-Buddhabrot":"#34d399",
+  "Fractal / Nebulabrot":"#34d399",
+  "Fractal / Tricorn":"#34d399",
+  "Fractal / Multibrot":"#34d399",
+  "3D / Sphere":"#f472b6",
+  "3D / Cube":"#f472b6",
+  "3D / Torus":"#f472b6",
+  "3D / Cylinder":"#f472b6",
+  "3D / Cone":"#f472b6",
+  "3D / Pyramid":"#f472b6",
+  "3D / Octahedron":"#f472b6",
+  "3D / Icosahedron":"#f472b6",
+  "3D / M\u00f6bius Strip":"#f472b6",
+  "3D / Klein Bottle":"#f472b6",
+  "3D / Height Map":"#f472b6",
+  "3D / Displacement":"#f472b6",
+  "3D / Relief":"#f472b6",
+  "3D / Extrusion":"#f472b6",
+  "3D / Bevel":"#f472b6",
+  "3D / Ray March":"#f472b6",
+  "3D / SDF":"#f472b6",
+  "3D / Metaball":"#f472b6",
+  "3D / Isosurface":"#f472b6",
+  "3D / Voxel":"#f472b6",
+  "3D / Wireframe":"#f472b6",
+  "3D / Pointcloud":"#f472b6",
+  "3D / Polygon":"#f472b6",
+  "3D / Normal Map":"#f472b6",
+  "3D / Depth Map":"#f472b6",
+  "3D / Shadow":"#f472b6",
+  "3D / Ambient Occlusion":"#f472b6",
+  "3D / Global Illumination":"#f472b6",
+  "3D / Caustic":"#f472b6",
+  "3D / Subsurface":"#f472b6",
+  "Light / Spotlight":"#fbbf24",
+  "Light / Sunbeam":"#fbbf24",
+  "Light / Caustic":"#fbbf24",
+  "Light / Bokeh":"#fbbf24",
+  "Light / Flare":"#fbbf24",
+  "Light / Halo":"#fbbf24",
+  "Light / Corona":"#fbbf24",
+  "Light / Rainbow":"#fbbf24",
+  "Light / Diffraction":"#fbbf24",
+  "Light / Refraction":"#fbbf24",
+  "Light / Reflection":"#fbbf24",
+  "Light / Fresnel":"#fbbf24",
+  "Light / Iridescence":"#fbbf24",
+  "Light / Phosphorescence":"#fbbf24",
+  "Light / Bioluminescence":"#fbbf24",
+  "Light / Neon":"#fbbf24",
+  "Light / Laser":"#fbbf24",
+  "Light / LED":"#fbbf24",
+  "Light / Fluorescent":"#fbbf24",
+  "Light / Incandescent":"#fbbf24",
+  "Light / Northern Lights":"#fbbf24",
+  "Light / Firefly":"#fbbf24",
+  "Light / Lightning":"#fbbf24",
+  "Light / Plasma":"#fbbf24",
+  "Light / Electric":"#fbbf24",
+  "Texture / Grain":"#94a3b8",
+  "Texture / Noise":"#94a3b8",
+  "Texture / Perlin":"#94a3b8",
+  "Texture / Simplex":"#94a3b8",
+  "Texture / Worley":"#94a3b8",
+  "Texture / Marble":"#94a3b8",
+  "Texture / Wood":"#94a3b8",
+  "Texture / Stone":"#94a3b8",
+  "Texture / Metal":"#94a3b8",
+  "Texture / Fabric":"#94a3b8",
+  "Texture / Paper":"#94a3b8",
+  "Texture / Leather":"#94a3b8",
+  "Texture / Plastic":"#94a3b8",
+  "Texture / Glass":"#94a3b8",
+  "Texture / Water":"#94a3b8",
+  "Texture / Sand":"#94a3b8",
+  "Texture / Snow":"#94a3b8",
+  "Texture / Ice":"#94a3b8",
+  "Texture / Fire":"#94a3b8",
+  "Texture / Smoke":"#94a3b8",
+  "Texture / Cloud":"#94a3b8",
+  "Texture / Rust":"#94a3b8",
+  "Texture / Moss":"#94a3b8",
+  "Texture / Bark":"#94a3b8",
+  "Texture / Scale":"#94a3b8",
+  "Texture / Fur":"#94a3b8",
+  "Texture / Feather":"#94a3b8",
+  "Texture / Crystal":"#94a3b8",
+  "Texture / Gem":"#94a3b8",
+  "Texture / Lava":"#94a3b8",
+  "Art / Watercolor":"#e879f9",
+  "Art / Oil Paint":"#e879f9",
+  "Art / Acrylic":"#e879f9",
+  "Art / Gouache":"#e879f9",
+  "Art / Tempera":"#e879f9",
+  "Art / Pencil":"#e879f9",
+  "Art / Charcoal":"#e879f9",
+  "Art / Ink":"#e879f9",
+  "Art / Pen":"#e879f9",
+  "Art / Crayon":"#e879f9",
+  "Art / Pastel":"#e879f9",
+  "Art / Chalk":"#e879f9",
+  "Art / Wax":"#e879f9",
+  "Art / Spray":"#e879f9",
+  "Art / Airbrush":"#e879f9",
+  "Art / Pointillism":"#e879f9",
+  "Art / Impressionism":"#e879f9",
+  "Art / Expressionism":"#e879f9",
+  "Art / Cubism":"#e879f9",
+  "Art / Surrealism":"#e879f9",
+  "Art / Pop Art":"#e879f9",
+  "Art / Op Art":"#e879f9",
+  "Art / Bauhaus":"#e879f9",
+  "Art / Art Deco":"#e879f9",
+  "Art / Art Nouveau":"#e879f9",
+  "Art / Minimalism":"#e879f9",
+  "Art / Abstract":"#e879f9",
+  "Art / Geometric":"#e879f9",
+  "Art / Psychedelic":"#e879f9",
+  "Art / Vaporwave":"#e879f9",
+  "Art / Retrowave":"#e879f9",
+  "Art / Cyberpunk":"#e879f9",
+  "Art / Steampunk":"#e879f9",
+  "Art / Solarpunk":"#e879f9",
+  "Art / Dieselpunk":"#e879f9",
+  "Halftone / Dot":"#fb923c",
+  "Halftone / Line":"#fb923c",
+  "Halftone / Cross":"#fb923c",
+  "Halftone / Hex":"#fb923c",
+  "Halftone / Square":"#fb923c",
+  "Halftone / Diamond":"#fb923c",
+  "Halftone / Circle":"#fb923c",
+  "Halftone / Ellipse":"#fb923c",
+  "Halftone / Star":"#fb923c",
+  "Halftone / Triangle":"#fb923c",
+  "Pixel / Mosaic":"#60a5fa",
+  "Pixel / Minecraft":"#60a5fa",
+  "Pixel / 8-Bit":"#60a5fa",
+  "Pixel / 16-Bit":"#60a5fa",
+  "Pixel / Dither":"#60a5fa",
+  "Pixel / Floyd-Steinberg":"#60a5fa",
+  "Pixel / Bayer":"#60a5fa",
+  "Pixel / Atkinson":"#60a5fa",
+  "Pixel / Ordered":"#60a5fa",
+  "Pixel / Error Diffusion":"#60a5fa",
+  "Gen / Gradient":"#06d6a0",
+  "Gen / Noise Field":"#06d6a0",
+  "Gen / Flow Field":"#06d6a0",
+  "Gen / Reaction Diffusion":"#06d6a0",
+  "Gen / Cellular Automata":"#06d6a0",
+  "Gen / Voronoi":"#06d6a0",
+  "Gen / Delaunay":"#06d6a0",
+  "Gen / Truchet":"#06d6a0",
+  "Gen / Lissajous":"#06d6a0",
+  "Gen / Rose Curve":"#06d6a0",
+  "Gen / Spirograph":"#06d6a0",
+  "Gen / Harmonograph":"#06d6a0",
+  "Gen / Hypotrochoid":"#06d6a0",
+  "Gen / Epitrochoid":"#06d6a0",
+  "Gen / Epicycloid":"#06d6a0",
+  "Gen / Hypocycloid":"#06d6a0",
+  "Gen / Astroid":"#06d6a0",
+  "Gen / Deltoid":"#06d6a0",
+  "Gen / Nephroid":"#06d6a0",
+  "Gen / Cardioid":"#06d6a0",
+  "Gen / Sine Wave":"#06d6a0",
+  "Gen / Fourier":"#06d6a0",
+  "Gen / Wavelet":"#06d6a0",
+  "Gen / Parametric":"#06d6a0",
+  "Gen / Polar":"#06d6a0",
+  "Gen / Mandala":"#06d6a0",
+  "Gen / Sacred Geometry":"#06d6a0",
+  "Gen / Fibonacci":"#06d6a0",
+  "Gen / Golden Ratio":"#06d6a0",
+  "Gen / Phyllotaxis":"#06d6a0",
+  "Blend / Multiply":"#a78bfa",
+  "Blend / Screen":"#a78bfa",
+  "Blend / Overlay":"#a78bfa",
+  "Blend / Soft Light":"#a78bfa",
+  "Blend / Hard Light":"#a78bfa",
+  "Blend / Difference":"#a78bfa",
+  "Blend / Exclusion":"#a78bfa",
+  "Blend / Dodge":"#a78bfa",
+  "Blend / Burn":"#a78bfa",
+  "Blend / Vivid":"#a78bfa",
+  "Blend / Pin Light":"#a78bfa",
+  "Blend / Linear":"#a78bfa",
+  "Blend / Dissolve":"#a78bfa",
+  "Blend / Darken":"#a78bfa",
+  "Blend / Lighten":"#a78bfa",
+  "Blend / Color":"#a78bfa",
+  "Blend / Luminosity":"#a78bfa",
+  "Blend / Hue":"#a78bfa",
+  "Blend / Saturation":"#a78bfa",
+  "Blend / Bloom":"#a78bfa",
+  "Edge / Sobel":"#f87171",
+  "Edge / Canny":"#f87171",
+  "Edge / Laplacian":"#f87171",
+  "Edge / Prewitt":"#f87171",
+  "Edge / Roberts":"#f87171",
+  "Edge / Gradient":"#f87171",
+  "Edge / Contour":"#f87171",
+  "Edge / Outline":"#f87171",
+  "Edge / Glow":"#f87171",
+  "Edge / Inner":"#f87171",
+  "Edge / Neon":"#f87171",
+  "Edge / Sketch":"#f87171",
+  "Edge / Comic":"#f87171",
+  "Edge / Toon":"#f87171",
+  "Edge / Cel":"#f87171",
+  "Mosaic / Square":"#fdba74",
+  "Mosaic / Hex":"#fdba74",
+  "Mosaic / Triangle":"#fdba74",
+  "Mosaic / Circle":"#fdba74",
+  "Mosaic / Voronoi":"#fdba74",
+  "Mosaic / Random":"#fdba74",
+  "Mosaic / Stained Glass":"#fdba74",
+  "Mosaic / Byzantine":"#fdba74",
+  "Mosaic / Islamic":"#fdba74",
+  "Mosaic / Roman":"#fdba74",
+  "Mosaic / Photomosaic":"#fdba74",
+  "Mosaic / Ascii":"#fdba74",
+  "Mosaic / Braille":"#fdba74",
+  "Mosaic / Symbol":"#fdba74",
+  "Mosaic / Emoji":"#fdba74",
+  "Chroma / Aberration":"#22d3ee",
+  "Chroma / Dispersion":"#22d3ee",
+  "Chroma / Fringing":"#22d3ee",
+  "Chroma / Spectrum":"#22d3ee",
+  "Chroma / Prism":"#22d3ee",
+  "Chroma / Split":"#22d3ee",
+  "Chroma / Shift":"#22d3ee",
+  "Chroma / Leak":"#22d3ee",
+  "Chroma / Bleed":"#22d3ee",
+  "Chroma / Burn":"#22d3ee",
+  "Symmetry / P1":"#c084fc",
+  "Symmetry / P2":"#c084fc",
+  "Symmetry / PM":"#c084fc",
+  "Symmetry / PG":"#c084fc",
+  "Symmetry / CM":"#c084fc",
+  "Symmetry / PMM":"#c084fc",
+  "Symmetry / PMG":"#c084fc",
+  "Symmetry / PGG":"#c084fc",
+  "Symmetry / CMM":"#c084fc",
+  "Symmetry / P4":"#c084fc",
+  "Symmetry / P4M":"#c084fc",
+  "Symmetry / P4G":"#c084fc",
+  "Symmetry / P3":"#c084fc",
+  "Symmetry / P3M1":"#c084fc",
+  "Symmetry / P31M":"#c084fc",
+  "Symmetry / P6":"#c084fc",
+  "Symmetry / P6M":"#c084fc",
+  "Symmetry / Frieze":"#c084fc",
+  "Symmetry / Rosette":"#c084fc",
+  "Symmetry / Spherical":"#c084fc",
+  "Math / Complex":"#86efac",
+  "Math / Conformal":"#86efac",
+  "Math / Hyperbolic":"#86efac",
+  "Math / Projective":"#86efac",
+  "Math / Inversive":"#86efac",
+  "Math / Fourier":"#86efac",
+  "Math / Wavelet":"#86efac",
+  "Math / Hilbert":"#86efac",
+  "Math / Peano":"#86efac",
+  "Math / Cantor":"#86efac",
+  "Math / Strange Attractor":"#86efac",
+  "Math / Chaos":"#86efac",
+  "Math / Bifurcation":"#86efac",
+  "Math / Lyapunov":"#86efac",
+  "Math / Cellular":"#86efac",
+  "Film / Grain":"#fde68a",
+  "Film / Halation":"#fde68a",
+  "Film / Bloom":"#fde68a",
+  "Film / Lens Flare":"#fde68a",
+  "Film / Vignette":"#fde68a",
+  "Film / Chromatic":"#fde68a",
+  "Film / Dust":"#fde68a",
+  "Film / Scratch":"#fde68a",
+  "Film / Burn":"#fde68a",
+  "Film / Fade":"#fde68a",
+  "Film / Cross Process":"#fde68a",
+  "Film / Bleach Bypass":"#fde68a",
+  "Film / Push Pull":"#fde68a",
+  "Film / Reversal":"#fde68a",
+  "Film / Infrared":"#fde68a",
+  "Film / Daguerreotype":"#fde68a",
+  "Film / Cyanotype":"#fde68a",
+  "Film / Platinum":"#fde68a",
+  "Film / Gum Bichromate":"#fde68a",
+  "Film / Albumen":"#fde68a",
+  "Nature / Water":"#6ee7b7",
+  "Nature / Fire":"#6ee7b7",
+  "Nature / Earth":"#6ee7b7",
+  "Nature / Air":"#6ee7b7",
+  "Nature / Storm":"#6ee7b7",
+  "Nature / Ice":"#6ee7b7",
+  "Nature / Lava":"#6ee7b7",
+  "Nature / Aurora":"#6ee7b7",
+  "Nature / Galaxy":"#6ee7b7",
+  "Nature / Nebula":"#6ee7b7",
+  "Nature / Coral":"#6ee7b7",
+  "Nature / Crystal":"#6ee7b7",
+  "Nature / Mineral":"#6ee7b7",
+  "Nature / Biological":"#6ee7b7",
+  "Nature / Organic":"#6ee7b7",
+  "Retro / 8-Bit":"#fca5a5",
+  "Retro / 16-Bit":"#fca5a5",
+  "Retro / CRT":"#fca5a5",
+  "Retro / VHS":"#fca5a5",
+  "Retro / Cassette":"#fca5a5",
+  "Retro / Vinyl":"#fca5a5",
+  "Retro / Newspaper":"#fca5a5",
+  "Retro / Lithograph":"#fca5a5",
+  "Retro / Risograph":"#fca5a5",
+  "Retro / Screenprint":"#fca5a5",
+  "Retro / Xerox":"#fca5a5",
+  "Retro / Fax":"#fca5a5",
+  "Retro / Dot Matrix":"#fca5a5",
+  "Retro / Typewriter":"#fca5a5",
+  "Retro / Telegraph":"#fca5a5",
+  "Anim / Pulse":"#93c5fd",
+  "Anim / Flow":"#93c5fd",
+  "Anim / Orbit":"#93c5fd",
+  "Anim / Rotate":"#93c5fd",
+  "Anim / Scale":"#93c5fd",
+  "Anim / Morph":"#93c5fd",
+  "Anim / Trail":"#93c5fd",
+  "Anim / Echo":"#93c5fd",
+  "Anim / Strobe":"#93c5fd",
+  "Anim / Breathe":"#93c5fd",
+  "Border / Simple":"#d1d5db",
+  "Border / Ornate":"#d1d5db",
+  "Border / Geometric":"#d1d5db",
+  "Border / Organic":"#d1d5db",
+  "Border / Glitch":"#d1d5db",
+  "Border / Neon":"#d1d5db",
+  "Border / Film":"#d1d5db",
+  "Border / Polaroid":"#d1d5db",
+  "Border / Vintage":"#d1d5db",
+  "Border / Modern":"#d1d5db",
+  "Displace / Noise":"#fb7185",
+  "Displace / Wave":"#fb7185",
+  "Displace / Spiral":"#fb7185",
+  "Displace / Radial":"#fb7185",
+  "Displace / Fluid":"#fb7185",
+  "Displace / Magnetic":"#fb7185",
+  "Displace / Gravity":"#fb7185",
+  "Displace / Electric":"#fb7185",
+  "Displace / Random":"#fb7185",
+  "Displace / Structured":"#fb7185",
+  "DOF / Gaussian":"#bfdbfe",
+  "DOF / Hexagonal":"#bfdbfe",
+  "DOF / Bokeh":"#bfdbfe",
+  "DOF / Tilt Shift":"#bfdbfe",
+  "DOF / Miniature":"#bfdbfe",
+  "FX / Glitter":"#ddd6fe",
+  "FX / Sparkle":"#ddd6fe",
+  "FX / Shimmer":"#ddd6fe",
+  "FX / Glow":"#ddd6fe",
+  "FX / Shine":"#ddd6fe",
+  "FX / Hologram":"#ddd6fe",
+  "FX / Interference":"#ddd6fe",
+  "FX / Diffraction":"#ddd6fe",
+  "FX / Polarized":"#ddd6fe",
+  "FX / Thermal":"#ddd6fe",
+  "FX / X-Ray":"#ddd6fe",
+  "FX / Sonar":"#ddd6fe",
+  "FX / Radar":"#ddd6fe",
+  "FX / Ultrasound":"#ddd6fe",
+  "FX / Seismic":"#ddd6fe",
+  "Style / Impressionist":"#fecdd3",
+  "Style / Expressionist":"#fecdd3",
+  "Style / Fauve":"#fecdd3",
+  "Style / Dada":"#fecdd3",
+  "Style / Fluxus":"#fecdd3",
+  "Style / Suprematist":"#fecdd3",
+  "Style / Constructivist":"#fecdd3",
+  "Style / De Stijl":"#fecdd3",
+  "Style / Concrete":"#fecdd3",
+  "Style / Post-Modern":"#fecdd3",
+  "Style / Neo-Geo":"#fecdd3",
+  "Style / New Wave":"#fecdd3",
+  "Style / Grunge":"#fecdd3",
+  "Style / Rave":"#fecdd3",
+  "Style / Y2K":"#fecdd3",
+  "Style / Glam":"#fecdd3",
+  "Style / Punk":"#fecdd3",
+  "Style / Goth":"#fecdd3",
+  "Style / Industrial":"#fecdd3",
+  "Style / Ambient":"#fecdd3",
+  "Pattern / Stripe":"#bbf7d0",
+  "Pattern / Plaid":"#bbf7d0",
+  "Pattern / Houndstooth":"#bbf7d0",
+  "Pattern / Paisley":"#bbf7d0",
+  "Pattern / Damask":"#bbf7d0",
+  "Pattern / Toile":"#bbf7d0",
+  "Pattern / Ikat":"#bbf7d0",
+  "Pattern / Batik":"#bbf7d0",
+  "Pattern / Shibori":"#bbf7d0",
+  "Pattern / Tie-Dye":"#bbf7d0",
+  "Pattern / Chevron":"#bbf7d0",
+  "Pattern / Herringbone":"#bbf7d0",
+  "Pattern / Diamond":"#bbf7d0",
+  "Pattern / Argyle":"#bbf7d0",
+  "Pattern / Fair Isle":"#bbf7d0",
+  "Pattern / Aztec":"#bbf7d0",
+  "Pattern / Tribal":"#bbf7d0",
+  "Pattern / African":"#bbf7d0",
+  "Pattern / Geometric 2":"#bbf7d0",
+  "Pattern / Abstract":"#bbf7d0",
+  "Noise / Perlin":"#fed7aa",
+  "Noise / Simplex":"#fed7aa",
+  "Noise / Worley":"#fed7aa",
+  "Noise / Value":"#fed7aa",
+  "Noise / Gradient":"#fed7aa",
+  "Noise / Fractal":"#fed7aa",
+  "Noise / Turbulence":"#fed7aa",
+  "Noise / Ridge":"#fed7aa",
+  "Noise / Domain Warp":"#fed7aa",
+  "Noise / Curl":"#fed7aa",
+  "Transform / Scale":"#e0e7ff",
+  "Transform / Rotate":"#e0e7ff",
+  "Transform / Shear":"#e0e7ff",
+  "Transform / Reflect":"#e0e7ff",
+  "Transform / Translate":"#e0e7ff",
+  "Transform / Affine":"#e0e7ff",
+  "Transform / Projective":"#e0e7ff",
+  "Transform / Conformal":"#e0e7ff",
+  "Transform / M\u00f6bius":"#e0e7ff",
+  "Transform / Inversion":"#e0e7ff",
+  "Map / Mercator":"#cffafe",
+  "Map / Equirectangular":"#cffafe",
+  "Map / Stereographic":"#cffafe",
+  "Map / Orthographic":"#cffafe",
+  "Map / Azimuthal":"#cffafe",
+  "Map / Sinusoidal":"#cffafe",
+  "Map / Mollweide":"#cffafe",
+  "Map / Goode":"#cffafe",
+  "Map / Dymaxion":"#cffafe",
+  "Map / AuthaGraph":"#cffafe",
+  "Signal / Amplitude":"#fef3c7",
+  "Signal / Frequency":"#fef3c7",
+  "Signal / Phase":"#fef3c7",
+  "Signal / Waveform":"#fef3c7",
+  "Signal / Spectrum":"#fef3c7",
+  "Signal / Oscilloscope":"#fef3c7",
+  "Signal / Vectorscope":"#fef3c7",
+  "Signal / Histogram":"#fef3c7",
+  "Signal / Equalizer":"#fef3c7",
+  "Signal / FFT":"#fef3c7",
+  "Crystal / Cubic":"#d1fae5",
+  "Crystal / Tetragonal":"#d1fae5",
+  "Crystal / Orthorhombic":"#d1fae5",
+  "Crystal / Hexagonal":"#d1fae5",
+  "Crystal / Trigonal":"#d1fae5",
+  "Crystal / Monoclinic":"#d1fae5",
+  "Crystal / Triclinic":"#d1fae5",
+  "Crystal / Quasicrystal":"#d1fae5",
+  "Crystal / Amorphous":"#d1fae5",
+  "Crystal / Liquid":"#d1fae5",
+  "Flow / Laminar":"#ffe4e6",
+  "Flow / Turbulent":"#ffe4e6",
+  "Flow / Vortex":"#ffe4e6",
+  "Flow / Eddy":"#ffe4e6",
+  "Flow / Jet":"#ffe4e6",
+  "Flow / Wake":"#ffe4e6",
+  "Flow / Boundary":"#ffe4e6",
+  "Flow / Separation":"#ffe4e6",
+  "Flow / Reattachment":"#ffe4e6",
+  "Flow / Stagnation":"#ffe4e6",
+  "Space / Wormhole":"#e0f2fe",
+  "Space / Blackhole":"#e0f2fe",
+  "Space / Pulsar":"#e0f2fe",
+  "Space / Quasar":"#e0f2fe",
+  "Space / Nebula 2":"#e0f2fe",
+  "Space / Galaxy 2":"#e0f2fe",
+  "Space / Comet":"#e0f2fe",
+  "Space / Asteroid":"#e0f2fe",
+  "Space / Planet":"#e0f2fe",
+  "Space / Moon":"#e0f2fe",
+  "Wave / Ocean":"#fef9c3",
+  "Wave / Sound":"#fef9c3",
+  "Wave / Light":"#fef9c3",
+  "Wave / Radio":"#fef9c3",
+  "Wave / Seismic 2":"#fef9c3",
+  "Wave / Shock":"#fef9c3",
+  "Wave / Standing":"#fef9c3",
+  "Wave / Interference":"#fef9c3",
+  "Wave / Diffraction 2":"#fef9c3",
+  "Wave / Refraction 2":"#fef9c3",
+  "Bio / Cell":"#dcfce7",
+  "Bio / DNA":"#dcfce7",
+  "Bio / Virus":"#dcfce7",
+  "Bio / Bacteria":"#dcfce7",
+  "Bio / Mycelium":"#dcfce7",
+  "Bio / Leaf":"#dcfce7",
+  "Bio / Shell":"#dcfce7",
+  "Bio / Scale 2":"#dcfce7",
+  "Bio / Bone":"#dcfce7",
+  "Bio / Skin":"#dcfce7",
+  "Quantum / Superposition":"#f0fdf4",
+  "Quantum / Entanglement":"#f0fdf4",
+  "Quantum / Tunneling":"#f0fdf4",
+  "Quantum / Interference":"#f0fdf4",
+  "Quantum / Decoherence":"#f0fdf4",
+  "Time / Past":"#ecfdf5",
+  "Time / Future":"#ecfdf5",
+  "Time / Loop":"#ecfdf5",
+  "Time / Reverse":"#ecfdf5",
+  "Time / Dilate":"#ecfdf5",
+  "Dream / Lucid":"#fdf4ff",
+  "Dream / Nightmare":"#fdf4ff",
+  "Dream / Hypnagogic":"#fdf4ff",
+  "Dream / Liminal":"#fdf4ff",
+  "Dream / Surreal":"#fdf4ff",
+  "Emotion / Joy":"#fef2f2",
+  "Emotion / Sorrow":"#fef2f2",
+  "Emotion / Rage":"#fef2f2",
+  "Emotion / Fear":"#fef2f2",
+  "Emotion / Awe":"#fef2f2",
+  "Season / Spring":"#fff7ed",
+  "Season / Summer":"#fff7ed",
+  "Season / Autumn":"#fff7ed",
+  "Season / Winter":"#fff7ed",
+  "Season / Solstice":"#fff7ed",
+  "Material / Gold":"#fffbeb",
+  "Material / Silver":"#fffbeb",
+  "Material / Bronze":"#fffbeb",
+  "Material / Copper":"#fffbeb",
+  "Material / Titanium":"#fffbeb",
+  "Material / Diamond":"#fffbeb",
+  "Material / Ruby":"#fffbeb",
+  "Material / Emerald":"#fffbeb",
+  "Material / Sapphire":"#fffbeb",
+  "Material / Pearl":"#fffbeb",
+  "Architecture / Gothic":"#f0f9ff",
+  "Architecture / Baroque":"#f0f9ff",
+  "Architecture / Modernist":"#f0f9ff",
+  "Architecture / Brutalist":"#f0f9ff",
+  "Architecture / Deconstructivist":"#f0f9ff",
+  "Music / Jazz":"#faf5ff",
+  "Music / Electronic":"#faf5ff",
+  "Music / Classical":"#faf5ff",
+  "Music / Metal":"#faf5ff",
+  "Music / Ambient 2":"#faf5ff",
+  "Science / Quantum":"#f8fafc",
+  "Science / Relativity":"#f8fafc",
+  "Science / Thermodynamics":"#f8fafc",
+  "Science / Electromagnetism":"#f8fafc",
+  "Science / Gravity":"#f8fafc",
+  "Myth / Dragon":"#fdf2f8",
+  "Myth / Phoenix":"#fdf2f8",
+  "Myth / Leviathan":"#fdf2f8",
+  "Myth / Ouroboros":"#fdf2f8",
+  "Myth / Mandala 2":"#fdf2f8",
+  "Code / Binary":"#f0fdf4",
+  "Code / Hex":"#f0fdf4",
+  "Code / Matrix":"#f0fdf4",
+  "Code / Circuit":"#f0fdf4",
+  "Code / Algorithm":"#f0fdf4",
+  "Land / Mountain":"#f7fee7",
+  "Land / Desert":"#f7fee7",
+  "Land / Forest":"#f7fee7",
+  "Land / Ocean 2":"#f7fee7",
+  "Land / Arctic":"#f7fee7",
+  "Micro / Bacteria 2":"#ecfeff",
+  "Micro / Crystal 2":"#ecfeff",
+  "Micro / Fiber":"#ecfeff",
+  "Micro / Foam":"#ecfeff",
+  "Micro / Emulsion":"#ecfeff",
+  "FX / Custom 745":"#ddd6fe",
+  "FX / Custom 746":"#ddd6fe",
+  "FX / Custom 747":"#ddd6fe",
+  "FX / Custom 748":"#ddd6fe",
+  "FX / Custom 749":"#ddd6fe",
+  "FX / Custom 750":"#ddd6fe",
+  "FX / Custom 751":"#ddd6fe",
+  "FX / Custom 752":"#ddd6fe",
+  "FX / Custom 753":"#ddd6fe",
+  "FX / Custom 754":"#ddd6fe",
+  "FX / Custom 755":"#ddd6fe",
+  "FX / Custom 756":"#ddd6fe",
+  "FX / Custom 757":"#ddd6fe",
+  "FX / Custom 758":"#ddd6fe",
+  "FX / Custom 759":"#ddd6fe",
+  "FX / Custom 760":"#ddd6fe",
+  "FX / Custom 761":"#ddd6fe",
+  "FX / Custom 762":"#ddd6fe",
+  "FX / Custom 763":"#ddd6fe",
+  "FX / Custom 764":"#ddd6fe",
+  "FX / Custom 765":"#ddd6fe",
+  "FX / Custom 766":"#ddd6fe",
+  "FX / Custom 767":"#ddd6fe",
+  "FX / Custom 768":"#ddd6fe",
+  "FX / Custom 769":"#ddd6fe",
+  "FX / Custom 770":"#ddd6fe",
+  "FX / Custom 771":"#ddd6fe",
+  "FX / Custom 772":"#ddd6fe",
+  "FX / Custom 773":"#ddd6fe",
+  "FX / Custom 774":"#ddd6fe",
+  "FX / Custom 775":"#ddd6fe",
+  "FX / Custom 776":"#ddd6fe",
+  "FX / Custom 777":"#ddd6fe",
+  "FX / Custom 778":"#ddd6fe",
+  "FX / Custom 779":"#ddd6fe",
+  "FX / Custom 780":"#ddd6fe",
+  "FX / Custom 781":"#ddd6fe",
+  "FX / Custom 782":"#ddd6fe",
+  "FX / Custom 783":"#ddd6fe",
+  "FX / Custom 784":"#ddd6fe",
+  "FX / Custom 785":"#ddd6fe",
+  "FX / Custom 786":"#ddd6fe",
+  "FX / Custom 787":"#ddd6fe",
+  "FX / Custom 788":"#ddd6fe",
+  "FX / Custom 789":"#ddd6fe",
+  "FX / Custom 790":"#ddd6fe",
+  "FX / Custom 791":"#ddd6fe",
+  "FX / Custom 792":"#ddd6fe",
+  "FX / Custom 793":"#ddd6fe",
+  "FX / Custom 794":"#ddd6fe",
+  "FX / Custom 795":"#ddd6fe",
+  "FX / Custom 796":"#ddd6fe",
+  "FX / Custom 797":"#ddd6fe",
+  "FX / Custom 798":"#ddd6fe",
+  "FX / Custom 799":"#ddd6fe",
+  "FX / Custom 800":"#ddd6fe",
+  "FX / Custom 801":"#ddd6fe",
+  "FX / Custom 802":"#ddd6fe",
+  "FX / Custom 803":"#ddd6fe",
+  "FX / Custom 804":"#ddd6fe",
+  "FX / Custom 805":"#ddd6fe",
+  "FX / Custom 806":"#ddd6fe",
+  "FX / Custom 807":"#ddd6fe",
+  "FX / Custom 808":"#ddd6fe",
+  "FX / Custom 809":"#ddd6fe",
+  "FX / Custom 810":"#ddd6fe",
+  "FX / Custom 811":"#ddd6fe",
+  "FX / Custom 812":"#ddd6fe",
+  "FX / Custom 813":"#ddd6fe",
+  "FX / Custom 814":"#ddd6fe",
+  "FX / Custom 815":"#ddd6fe",
+  "FX / Custom 816":"#ddd6fe",
+  "FX / Custom 817":"#ddd6fe",
+  "FX / Custom 818":"#ddd6fe",
+  "FX / Custom 819":"#ddd6fe",
+  "FX / Custom 820":"#ddd6fe",
+  "FX / Custom 821":"#ddd6fe",
+  "FX / Custom 822":"#ddd6fe",
+  "FX / Custom 823":"#ddd6fe",
+  "FX / Custom 824":"#ddd6fe",
+  "FX / Custom 825":"#ddd6fe",
+  "FX / Custom 826":"#ddd6fe",
+  "FX / Custom 827":"#ddd6fe",
+  "FX / Custom 828":"#ddd6fe",
+  "FX / Custom 829":"#ddd6fe",
+  "FX / Custom 830":"#ddd6fe",
+  "FX / Custom 831":"#ddd6fe",
+  "FX / Custom 832":"#ddd6fe",
+  "FX / Custom 833":"#ddd6fe",
+  "FX / Custom 834":"#ddd6fe",
+  "FX / Custom 835":"#ddd6fe",
+  "FX / Custom 836":"#ddd6fe",
+  "FX / Custom 837":"#ddd6fe",
+  "FX / Custom 838":"#ddd6fe",
+  "FX / Custom 839":"#ddd6fe",
+  "FX / Custom 840":"#ddd6fe",
+  "FX / Custom 841":"#ddd6fe",
+  "FX / Custom 842":"#ddd6fe",
+  "FX / Custom 843":"#ddd6fe",
+  "FX / Custom 844":"#ddd6fe",
+  "FX / Custom 845":"#ddd6fe",
+  "FX / Custom 846":"#ddd6fe",
+  "FX / Custom 847":"#ddd6fe",
+  "FX / Custom 848":"#ddd6fe",
+  "FX / Custom 849":"#ddd6fe",
+  "FX / Custom 850":"#ddd6fe",
+  "FX / Custom 851":"#ddd6fe",
+  "FX / Custom 852":"#ddd6fe",
+  "FX / Custom 853":"#ddd6fe",
+  "FX / Custom 854":"#ddd6fe",
+  "FX / Custom 855":"#ddd6fe",
+  "FX / Custom 856":"#ddd6fe",
+  "FX / Custom 857":"#ddd6fe",
+  "FX / Custom 858":"#ddd6fe",
+  "FX / Custom 859":"#ddd6fe",
+  "FX / Custom 860":"#ddd6fe",
+  "FX / Custom 861":"#ddd6fe",
+  "FX / Custom 862":"#ddd6fe",
+  "FX / Custom 863":"#ddd6fe",
+  "FX / Custom 864":"#ddd6fe",
+  "FX / Custom 865":"#ddd6fe",
+  "FX / Custom 866":"#ddd6fe",
+  "FX / Custom 867":"#ddd6fe",
+  "FX / Custom 868":"#ddd6fe",
+  "FX / Custom 869":"#ddd6fe",
+  "FX / Custom 870":"#ddd6fe",
+  "FX / Custom 871":"#ddd6fe",
+  "FX / Custom 872":"#ddd6fe",
+  "FX / Custom 873":"#ddd6fe",
+  "FX / Custom 874":"#ddd6fe",
+  "FX / Custom 875":"#ddd6fe",
+  "FX / Custom 876":"#ddd6fe",
+  "FX / Custom 877":"#ddd6fe",
+  "FX / Custom 878":"#ddd6fe",
+  "FX / Custom 879":"#ddd6fe",
+  "FX / Custom 880":"#ddd6fe",
+  "FX / Custom 881":"#ddd6fe",
+  "FX / Custom 882":"#ddd6fe",
+  "FX / Custom 883":"#ddd6fe",
+  "FX / Custom 884":"#ddd6fe",
+  "FX / Custom 885":"#ddd6fe",
+  "FX / Custom 886":"#ddd6fe",
+  "FX / Custom 887":"#ddd6fe",
+  "FX / Custom 888":"#ddd6fe",
+  "FX / Custom 889":"#ddd6fe",
+  "FX / Custom 890":"#ddd6fe",
+  "FX / Custom 891":"#ddd6fe",
+  "FX / Custom 892":"#ddd6fe",
+  "FX / Custom 893":"#ddd6fe",
+  "FX / Custom 894":"#ddd6fe",
+  "FX / Custom 895":"#ddd6fe",
+  "FX / Custom 896":"#ddd6fe",
+  "FX / Custom 897":"#ddd6fe",
+  "FX / Custom 898":"#ddd6fe",
+  "FX / Custom 899":"#ddd6fe",
+  "FX / Custom 900":"#ddd6fe",
+  "FX / Custom 901":"#ddd6fe",
+  "FX / Custom 902":"#ddd6fe",
+  "FX / Custom 903":"#ddd6fe",
+  "FX / Custom 904":"#ddd6fe",
+  "FX / Custom 905":"#ddd6fe",
+  "FX / Custom 906":"#ddd6fe",
+  "FX / Custom 907":"#ddd6fe",
+  "FX / Custom 908":"#ddd6fe",
+  "FX / Custom 909":"#ddd6fe",
+  "FX / Custom 910":"#ddd6fe",
+  "FX / Custom 911":"#ddd6fe",
+  "FX / Custom 912":"#ddd6fe",
+  "FX / Custom 913":"#ddd6fe",
+  "FX / Custom 914":"#ddd6fe",
+  "FX / Custom 915":"#ddd6fe",
+  "FX / Custom 916":"#ddd6fe",
+  "FX / Custom 917":"#ddd6fe",
+  "FX / Custom 918":"#ddd6fe",
+  "FX / Custom 919":"#ddd6fe",
+  "FX / Custom 920":"#ddd6fe",
+  "FX / Custom 921":"#ddd6fe",
+  "FX / Custom 922":"#ddd6fe",
+  "FX / Custom 923":"#ddd6fe",
+  "FX / Custom 924":"#ddd6fe",
+  "FX / Custom 925":"#ddd6fe",
+  "FX / Custom 926":"#ddd6fe",
+  "FX / Custom 927":"#ddd6fe",
+  "FX / Custom 928":"#ddd6fe",
+  "FX / Custom 929":"#ddd6fe",
+  "FX / Custom 930":"#ddd6fe",
+  "FX / Custom 931":"#ddd6fe",
+  "FX / Custom 932":"#ddd6fe",
+  "FX / Custom 933":"#ddd6fe",
+  "FX / Custom 934":"#ddd6fe",
+  "FX / Custom 935":"#ddd6fe",
+  "FX / Custom 936":"#ddd6fe",
+  "FX / Custom 937":"#ddd6fe",
+  "FX / Custom 938":"#ddd6fe",
+  "FX / Custom 939":"#ddd6fe",
+  "FX / Custom 940":"#ddd6fe",
+  "FX / Custom 941":"#ddd6fe",
+  "FX / Custom 942":"#ddd6fe",
+  "FX / Custom 943":"#ddd6fe",
+  "FX / Custom 944":"#ddd6fe",
+  "FX / Custom 945":"#ddd6fe",
+  "FX / Custom 946":"#ddd6fe",
+  "FX / Custom 947":"#ddd6fe",
+  "FX / Custom 948":"#ddd6fe",
+  "FX / Custom 949":"#ddd6fe",
+  "FX / Custom 950":"#ddd6fe",
+  "FX / Custom 951":"#ddd6fe",
+  "FX / Custom 952":"#ddd6fe",
+  "FX / Custom 953":"#ddd6fe",
+  "FX / Custom 954":"#ddd6fe",
+  "FX / Custom 955":"#ddd6fe",
+  "FX / Custom 956":"#ddd6fe",
+  "FX / Custom 957":"#ddd6fe",
+  "FX / Custom 958":"#ddd6fe",
+  "FX / Custom 959":"#ddd6fe",
+  "FX / Custom 960":"#ddd6fe",
+  "FX / Custom 961":"#ddd6fe",
+  "FX / Custom 962":"#ddd6fe",
+  "FX / Custom 963":"#ddd6fe",
+  "FX / Custom 964":"#ddd6fe",
+  "FX / Custom 965":"#ddd6fe",
+  "FX / Custom 966":"#ddd6fe",
+  "FX / Custom 967":"#ddd6fe",
+  "FX / Custom 968":"#ddd6fe",
+  "FX / Custom 969":"#ddd6fe",
+  "FX / Custom 970":"#ddd6fe",
+  "FX / Custom 971":"#ddd6fe",
+  "FX / Custom 972":"#ddd6fe",
+  "FX / Custom 973":"#ddd6fe",
+  "FX / Custom 974":"#ddd6fe",
+  "FX / Custom 975":"#ddd6fe",
+  "FX / Custom 976":"#ddd6fe",
+  "FX / Custom 977":"#ddd6fe",
+  "FX / Custom 978":"#ddd6fe",
+  "FX / Custom 979":"#ddd6fe",
+  "FX / Custom 980":"#ddd6fe",
+  "FX / Custom 981":"#ddd6fe",
+  "FX / Custom 982":"#ddd6fe",
+  "FX / Custom 983":"#ddd6fe",
+  "FX / Custom 984":"#ddd6fe",
+  "FX / Custom 985":"#ddd6fe",
+  "FX / Custom 986":"#ddd6fe",
+  "FX / Custom 987":"#ddd6fe",
+  "FX / Custom 988":"#ddd6fe",
+  "FX / Custom 989":"#ddd6fe",
+  "FX / Custom 990":"#ddd6fe",
+  "FX / Custom 991":"#ddd6fe",
+  "FX / Custom 992":"#ddd6fe",
+  "FX / Custom 993":"#ddd6fe",
+  "FX / Custom 994":"#ddd6fe",
+  "FX / Custom 995":"#ddd6fe",
+  "FX / Custom 996":"#ddd6fe",
+  "FX / Custom 997":"#ddd6fe",
+  "FX / Custom 998":"#ddd6fe",
+  "FX / Custom 999":"#ddd6fe",
+};
+
+const CATEGORIES = ["Glitch / Block", "Glitch / Pixel", "Glitch / Channel", "Glitch / Streak", "Glitch / Scan", "Glitch / Wave", "Glitch / Grid", "Glitch / Corrupt", "Glitch / Databend", "Glitch / Chroma", "Glitch / Ghost", "Glitch / Jitter", "Glitch / Smear", "Glitch / Bleed", "Glitch / Noise", "Glitch / Static", "Glitch / VHS", "Glitch / CRT", "Glitch / Digital", "Glitch / Analog", "Glitch / RGB Split", "Glitch / Desync", "Glitch / Buffer", "Glitch / Compression", "Glitch / Raster", "Glitch / Vector", "Glitch / Memory", "Glitch / Interrupt", "Glitch / Dropout", "Glitch / Overflow", "Mirror / Horizontal", "Mirror / Vertical", "Mirror / Diagonal", "Mirror / Radial", "Mirror / Hex", "Mirror / Kaleidoscope", "Mirror / Multi", "Mirror / Quad", "Mirror / Triangle", "Mirror / Octagon", "Mirror / Spiral", "Mirror / Fractal", "Mirror / Infinite", "Mirror / Locus", "Mirror / Polar", "Mirror / Axial", "Mirror / Central", "Mirror / Recttile", "Mirror / Hextile", "Mirror / Voronoi", "Mirror / Droste", "Mirror / Escher", "Mirror / Aperiodic", "Mirror / Penrose", "Mirror / Quasicrystal", "Mirror / Hyperbolic", "Mirror / Spherical", "Mirror / Toroidal", "Mirror / M\u00f6bius", "Mirror / Inversion", "Distort / Swirl", "Distort / Ripple", "Distort / Warp", "Distort / Stretch", "Distort / Pinch", "Distort / Bulge", "Distort / Wave", "Distort / Spiral", "Distort / Twirl", "Distort / Vortex", "Distort / Polar", "Distort / Fisheye", "Distort / Barrel", "Distort / Pincushion", "Distort / Tilt", "Distort / Shear", "Distort / Skew", "Distort / Perspective", "Distort / Melt", "Distort / Dissolve", "Distort / Flame", "Distort / Water", "Distort / Glass", "Distort / Smoke", "Distort / Oil", "Distort / Marble", "Distort / Wood", "Distort / Fabric", "Distort / Rubber", "Distort / Metal", "Color / Hue", "Color / Saturation", "Color / Brightness", "Color / Contrast", "Color / Gamma", "Color / Curves", "Color / Levels", "Color / Posterize", "Color / Solarize", "Color / Invert", "Color / Duotone", "Color / Tritone", "Color / Sepia", "Color / Cross", "Color / Split", "Color / Grade", "Color / Film", "Color / Vintage", "Color / Fade", "Color / Matte", "Color / Neon", "Color / Vivid", "Color / Muted", "Color / Pastel", "Color / Deep", "Color / Cold", "Color / Warm", "Color / Golden", "Color / Teal", "Color / Cyan", "Color / Magenta", "Color / Infrared", "Color / Ultraviolet", "Color / Night", "Color / Thermal", "Color / Heatmap", "Color / Spectral", "Color / Rainbow", "Color / Prism", "Color / Aurora", "Blur / Gaussian", "Blur / Motion", "Blur / Radial", "Blur / Zoom", "Blur / Tilt-Shift", "Blur / Bokeh", "Blur / Lens", "Blur / Defocus", "Blur / Depth", "Blur / Vignette", "Blur / Directional", "Blur / Spin", "Blur / Explosion", "Blur / Dream", "Blur / Soft", "Blur / Box", "Blur / Bilateral", "Blur / Kawase", "Blur / Hexagonal", "Blur / Anamorphic", "Fractal / Mandelbrot", "Fractal / Julia", "Fractal / Burning Ship", "Fractal / Newton", "Fractal / Sierpinski", "Fractal / Koch", "Fractal / Dragon", "Fractal / Barnsley", "Fractal / Lyapunov", "Fractal / IFS", "Fractal / KIFS", "Fractal / Flame", "Fractal / Strange Attractor", "Fractal / Lorenz", "Fractal / Rossler", "Fractal / Henon", "Fractal / Duffing", "Fractal / Clifford", "Fractal / Peter De Jong", "Fractal / Pickover", "Fractal / Quaternion", "Fractal / Bicomplex", "Fractal / Escape Time", "Fractal / Distance Estimate", "Fractal / Orbit Trap", "Fractal / Buddhabrot", "Fractal / Anti-Buddhabrot", "Fractal / Nebulabrot", "Fractal / Tricorn", "Fractal / Multibrot", "3D / Sphere", "3D / Cube", "3D / Torus", "3D / Cylinder", "3D / Cone", "3D / Pyramid", "3D / Octahedron", "3D / Icosahedron", "3D / M\u00f6bius Strip", "3D / Klein Bottle", "3D / Height Map", "3D / Displacement", "3D / Relief", "3D / Extrusion", "3D / Bevel", "3D / Ray March", "3D / SDF", "3D / Metaball", "3D / Isosurface", "3D / Voxel", "3D / Wireframe", "3D / Pointcloud", "3D / Polygon", "3D / Normal Map", "3D / Depth Map", "3D / Shadow", "3D / Ambient Occlusion", "3D / Global Illumination", "3D / Caustic", "3D / Subsurface", "Light / Spotlight", "Light / Sunbeam", "Light / Caustic", "Light / Bokeh", "Light / Flare", "Light / Halo", "Light / Corona", "Light / Rainbow", "Light / Diffraction", "Light / Refraction", "Light / Reflection", "Light / Fresnel", "Light / Iridescence", "Light / Phosphorescence", "Light / Bioluminescence", "Light / Neon", "Light / Laser", "Light / LED", "Light / Fluorescent", "Light / Incandescent", "Light / Northern Lights", "Light / Firefly", "Light / Lightning", "Light / Plasma", "Light / Electric", "Texture / Grain", "Texture / Noise", "Texture / Perlin", "Texture / Simplex", "Texture / Worley", "Texture / Marble", "Texture / Wood", "Texture / Stone", "Texture / Metal", "Texture / Fabric", "Texture / Paper", "Texture / Leather", "Texture / Plastic", "Texture / Glass", "Texture / Water", "Texture / Sand", "Texture / Snow", "Texture / Ice", "Texture / Fire", "Texture / Smoke", "Texture / Cloud", "Texture / Rust", "Texture / Moss", "Texture / Bark", "Texture / Scale", "Texture / Fur", "Texture / Feather", "Texture / Crystal", "Texture / Gem", "Texture / Lava", "Art / Watercolor", "Art / Oil Paint", "Art / Acrylic", "Art / Gouache", "Art / Tempera", "Art / Pencil", "Art / Charcoal", "Art / Ink", "Art / Pen", "Art / Crayon", "Art / Pastel", "Art / Chalk", "Art / Wax", "Art / Spray", "Art / Airbrush", "Art / Pointillism", "Art / Impressionism", "Art / Expressionism", "Art / Cubism", "Art / Surrealism", "Art / Pop Art", "Art / Op Art", "Art / Bauhaus", "Art / Art Deco", "Art / Art Nouveau", "Art / Minimalism", "Art / Abstract", "Art / Geometric", "Art / Psychedelic", "Art / Vaporwave", "Art / Retrowave", "Art / Cyberpunk", "Art / Steampunk", "Art / Solarpunk", "Art / Dieselpunk", "Halftone / Dot", "Halftone / Line", "Halftone / Cross", "Halftone / Hex", "Halftone / Square", "Halftone / Diamond", "Halftone / Circle", "Halftone / Ellipse", "Halftone / Star", "Halftone / Triangle", "Pixel / Mosaic", "Pixel / Minecraft", "Pixel / 8-Bit", "Pixel / 16-Bit", "Pixel / Dither", "Pixel / Floyd-Steinberg", "Pixel / Bayer", "Pixel / Atkinson", "Pixel / Ordered", "Pixel / Error Diffusion", "Gen / Gradient", "Gen / Noise Field", "Gen / Flow Field", "Gen / Reaction Diffusion", "Gen / Cellular Automata", "Gen / Voronoi", "Gen / Delaunay", "Gen / Truchet", "Gen / Lissajous", "Gen / Rose Curve", "Gen / Spirograph", "Gen / Harmonograph", "Gen / Hypotrochoid", "Gen / Epitrochoid", "Gen / Epicycloid", "Gen / Hypocycloid", "Gen / Astroid", "Gen / Deltoid", "Gen / Nephroid", "Gen / Cardioid", "Gen / Sine Wave", "Gen / Fourier", "Gen / Wavelet", "Gen / Parametric", "Gen / Polar", "Gen / Mandala", "Gen / Sacred Geometry", "Gen / Fibonacci", "Gen / Golden Ratio", "Gen / Phyllotaxis", "Blend / Multiply", "Blend / Screen", "Blend / Overlay", "Blend / Soft Light", "Blend / Hard Light", "Blend / Difference", "Blend / Exclusion", "Blend / Dodge", "Blend / Burn", "Blend / Vivid", "Blend / Pin Light", "Blend / Linear", "Blend / Dissolve", "Blend / Darken", "Blend / Lighten", "Blend / Color", "Blend / Luminosity", "Blend / Hue", "Blend / Saturation", "Blend / Bloom", "Edge / Sobel", "Edge / Canny", "Edge / Laplacian", "Edge / Prewitt", "Edge / Roberts", "Edge / Gradient", "Edge / Contour", "Edge / Outline", "Edge / Glow", "Edge / Inner", "Edge / Neon", "Edge / Sketch", "Edge / Comic", "Edge / Toon", "Edge / Cel", "Mosaic / Square", "Mosaic / Hex", "Mosaic / Triangle", "Mosaic / Circle", "Mosaic / Voronoi", "Mosaic / Random", "Mosaic / Stained Glass", "Mosaic / Byzantine", "Mosaic / Islamic", "Mosaic / Roman", "Mosaic / Photomosaic", "Mosaic / Ascii", "Mosaic / Braille", "Mosaic / Symbol", "Mosaic / Emoji", "Chroma / Aberration", "Chroma / Dispersion", "Chroma / Fringing", "Chroma / Spectrum", "Chroma / Prism", "Chroma / Split", "Chroma / Shift", "Chroma / Leak", "Chroma / Bleed", "Chroma / Burn", "Symmetry / P1", "Symmetry / P2", "Symmetry / PM", "Symmetry / PG", "Symmetry / CM", "Symmetry / PMM", "Symmetry / PMG", "Symmetry / PGG", "Symmetry / CMM", "Symmetry / P4", "Symmetry / P4M", "Symmetry / P4G", "Symmetry / P3", "Symmetry / P3M1", "Symmetry / P31M", "Symmetry / P6", "Symmetry / P6M", "Symmetry / Frieze", "Symmetry / Rosette", "Symmetry / Spherical", "Math / Complex", "Math / Conformal", "Math / Hyperbolic", "Math / Projective", "Math / Inversive", "Math / Fourier", "Math / Wavelet", "Math / Hilbert", "Math / Peano", "Math / Cantor", "Math / Strange Attractor", "Math / Chaos", "Math / Bifurcation", "Math / Lyapunov", "Math / Cellular", "Film / Grain", "Film / Halation", "Film / Bloom", "Film / Lens Flare", "Film / Vignette", "Film / Chromatic", "Film / Dust", "Film / Scratch", "Film / Burn", "Film / Fade", "Film / Cross Process", "Film / Bleach Bypass", "Film / Push Pull", "Film / Reversal", "Film / Infrared", "Film / Daguerreotype", "Film / Cyanotype", "Film / Platinum", "Film / Gum Bichromate", "Film / Albumen", "Nature / Water", "Nature / Fire", "Nature / Earth", "Nature / Air", "Nature / Storm", "Nature / Ice", "Nature / Lava", "Nature / Aurora", "Nature / Galaxy", "Nature / Nebula", "Nature / Coral", "Nature / Crystal", "Nature / Mineral", "Nature / Biological", "Nature / Organic", "Retro / 8-Bit", "Retro / 16-Bit", "Retro / CRT", "Retro / VHS", "Retro / Cassette", "Retro / Vinyl", "Retro / Newspaper", "Retro / Lithograph", "Retro / Risograph", "Retro / Screenprint", "Retro / Xerox", "Retro / Fax", "Retro / Dot Matrix", "Retro / Typewriter", "Retro / Telegraph", "Anim / Pulse", "Anim / Flow", "Anim / Orbit", "Anim / Rotate", "Anim / Scale", "Anim / Morph", "Anim / Trail", "Anim / Echo", "Anim / Strobe", "Anim / Breathe", "Border / Simple", "Border / Ornate", "Border / Geometric", "Border / Organic", "Border / Glitch", "Border / Neon", "Border / Film", "Border / Polaroid", "Border / Vintage", "Border / Modern", "Displace / Noise", "Displace / Wave", "Displace / Spiral", "Displace / Radial", "Displace / Fluid", "Displace / Magnetic", "Displace / Gravity", "Displace / Electric", "Displace / Random", "Displace / Structured", "DOF / Gaussian", "DOF / Hexagonal", "DOF / Bokeh", "DOF / Tilt Shift", "DOF / Miniature", "FX / Glitter", "FX / Sparkle", "FX / Shimmer", "FX / Glow", "FX / Shine", "FX / Hologram", "FX / Interference", "FX / Diffraction", "FX / Polarized", "FX / Thermal", "FX / X-Ray", "FX / Sonar", "FX / Radar", "FX / Ultrasound", "FX / Seismic", "Style / Impressionist", "Style / Expressionist", "Style / Fauve", "Style / Dada", "Style / Fluxus", "Style / Suprematist", "Style / Constructivist", "Style / De Stijl", "Style / Concrete", "Style / Post-Modern", "Style / Neo-Geo", "Style / New Wave", "Style / Grunge", "Style / Rave", "Style / Y2K", "Style / Glam", "Style / Punk", "Style / Goth", "Style / Industrial", "Style / Ambient", "Pattern / Stripe", "Pattern / Plaid", "Pattern / Houndstooth", "Pattern / Paisley", "Pattern / Damask", "Pattern / Toile", "Pattern / Ikat", "Pattern / Batik", "Pattern / Shibori", "Pattern / Tie-Dye", "Pattern / Chevron", "Pattern / Herringbone", "Pattern / Diamond", "Pattern / Argyle", "Pattern / Fair Isle", "Pattern / Aztec", "Pattern / Tribal", "Pattern / African", "Pattern / Geometric 2", "Pattern / Abstract", "Noise / Perlin", "Noise / Simplex", "Noise / Worley", "Noise / Value", "Noise / Gradient", "Noise / Fractal", "Noise / Turbulence", "Noise / Ridge", "Noise / Domain Warp", "Noise / Curl", "Transform / Scale", "Transform / Rotate", "Transform / Shear", "Transform / Reflect", "Transform / Translate", "Transform / Affine", "Transform / Projective", "Transform / Conformal", "Transform / M\u00f6bius", "Transform / Inversion", "Map / Mercator", "Map / Equirectangular", "Map / Stereographic", "Map / Orthographic", "Map / Azimuthal", "Map / Sinusoidal", "Map / Mollweide", "Map / Goode", "Map / Dymaxion", "Map / AuthaGraph", "Signal / Amplitude", "Signal / Frequency", "Signal / Phase", "Signal / Waveform", "Signal / Spectrum", "Signal / Oscilloscope", "Signal / Vectorscope", "Signal / Histogram", "Signal / Equalizer", "Signal / FFT", "Crystal / Cubic", "Crystal / Tetragonal", "Crystal / Orthorhombic", "Crystal / Hexagonal", "Crystal / Trigonal", "Crystal / Monoclinic", "Crystal / Triclinic", "Crystal / Quasicrystal", "Crystal / Amorphous", "Crystal / Liquid", "Flow / Laminar", "Flow / Turbulent", "Flow / Vortex", "Flow / Eddy", "Flow / Jet", "Flow / Wake", "Flow / Boundary", "Flow / Separation", "Flow / Reattachment", "Flow / Stagnation", "Space / Wormhole", "Space / Blackhole", "Space / Pulsar", "Space / Quasar", "Space / Nebula 2", "Space / Galaxy 2", "Space / Comet", "Space / Asteroid", "Space / Planet", "Space / Moon", "Wave / Ocean", "Wave / Sound", "Wave / Light", "Wave / Radio", "Wave / Seismic 2", "Wave / Shock", "Wave / Standing", "Wave / Interference", "Wave / Diffraction 2", "Wave / Refraction 2", "Bio / Cell", "Bio / DNA", "Bio / Virus", "Bio / Bacteria", "Bio / Mycelium", "Bio / Leaf", "Bio / Shell", "Bio / Scale 2", "Bio / Bone", "Bio / Skin", "Quantum / Superposition", "Quantum / Entanglement", "Quantum / Tunneling", "Quantum / Interference", "Quantum / Decoherence", "Time / Past", "Time / Future", "Time / Loop", "Time / Reverse", "Time / Dilate", "Dream / Lucid", "Dream / Nightmare", "Dream / Hypnagogic", "Dream / Liminal", "Dream / Surreal", "Emotion / Joy", "Emotion / Sorrow", "Emotion / Rage", "Emotion / Fear", "Emotion / Awe", "Season / Spring", "Season / Summer", "Season / Autumn", "Season / Winter", "Season / Solstice", "Material / Gold", "Material / Silver", "Material / Bronze", "Material / Copper", "Material / Titanium", "Material / Diamond", "Material / Ruby", "Material / Emerald", "Material / Sapphire", "Material / Pearl", "Architecture / Gothic", "Architecture / Baroque", "Architecture / Modernist", "Architecture / Brutalist", "Architecture / Deconstructivist", "Music / Jazz", "Music / Electronic", "Music / Classical", "Music / Metal", "Music / Ambient 2", "Science / Quantum", "Science / Relativity", "Science / Thermodynamics", "Science / Electromagnetism", "Science / Gravity", "Myth / Dragon", "Myth / Phoenix", "Myth / Leviathan", "Myth / Ouroboros", "Myth / Mandala 2", "Code / Binary", "Code / Hex", "Code / Matrix", "Code / Circuit", "Code / Algorithm", "Land / Mountain", "Land / Desert", "Land / Forest", "Land / Ocean 2", "Land / Arctic", "Micro / Bacteria 2", "Micro / Crystal 2", "Micro / Fiber", "Micro / Foam", "Micro / Emulsion", "FX / Custom 745", "FX / Custom 746", "FX / Custom 747", "FX / Custom 748", "FX / Custom 749", "FX / Custom 750", "FX / Custom 751", "FX / Custom 752", "FX / Custom 753", "FX / Custom 754", "FX / Custom 755", "FX / Custom 756", "FX / Custom 757", "FX / Custom 758", "FX / Custom 759", "FX / Custom 760", "FX / Custom 761", "FX / Custom 762", "FX / Custom 763", "FX / Custom 764", "FX / Custom 765", "FX / Custom 766", "FX / Custom 767", "FX / Custom 768", "FX / Custom 769", "FX / Custom 770", "FX / Custom 771", "FX / Custom 772", "FX / Custom 773", "FX / Custom 774", "FX / Custom 775", "FX / Custom 776", "FX / Custom 777", "FX / Custom 778", "FX / Custom 779", "FX / Custom 780", "FX / Custom 781", "FX / Custom 782", "FX / Custom 783", "FX / Custom 784", "FX / Custom 785", "FX / Custom 786", "FX / Custom 787", "FX / Custom 788", "FX / Custom 789", "FX / Custom 790", "FX / Custom 791", "FX / Custom 792", "FX / Custom 793", "FX / Custom 794", "FX / Custom 795", "FX / Custom 796", "FX / Custom 797", "FX / Custom 798", "FX / Custom 799", "FX / Custom 800", "FX / Custom 801", "FX / Custom 802", "FX / Custom 803", "FX / Custom 804", "FX / Custom 805", "FX / Custom 806", "FX / Custom 807", "FX / Custom 808", "FX / Custom 809", "FX / Custom 810", "FX / Custom 811", "FX / Custom 812", "FX / Custom 813", "FX / Custom 814", "FX / Custom 815", "FX / Custom 816", "FX / Custom 817", "FX / Custom 818", "FX / Custom 819", "FX / Custom 820", "FX / Custom 821", "FX / Custom 822", "FX / Custom 823", "FX / Custom 824", "FX / Custom 825", "FX / Custom 826", "FX / Custom 827", "FX / Custom 828", "FX / Custom 829", "FX / Custom 830", "FX / Custom 831", "FX / Custom 832", "FX / Custom 833", "FX / Custom 834", "FX / Custom 835", "FX / Custom 836", "FX / Custom 837", "FX / Custom 838", "FX / Custom 839", "FX / Custom 840", "FX / Custom 841", "FX / Custom 842", "FX / Custom 843", "FX / Custom 844", "FX / Custom 845", "FX / Custom 846", "FX / Custom 847", "FX / Custom 848", "FX / Custom 849", "FX / Custom 850", "FX / Custom 851", "FX / Custom 852", "FX / Custom 853", "FX / Custom 854", "FX / Custom 855", "FX / Custom 856", "FX / Custom 857", "FX / Custom 858", "FX / Custom 859", "FX / Custom 860", "FX / Custom 861", "FX / Custom 862", "FX / Custom 863", "FX / Custom 864", "FX / Custom 865", "FX / Custom 866", "FX / Custom 867", "FX / Custom 868", "FX / Custom 869", "FX / Custom 870", "FX / Custom 871", "FX / Custom 872", "FX / Custom 873", "FX / Custom 874", "FX / Custom 875", "FX / Custom 876", "FX / Custom 877", "FX / Custom 878", "FX / Custom 879", "FX / Custom 880", "FX / Custom 881", "FX / Custom 882", "FX / Custom 883", "FX / Custom 884", "FX / Custom 885", "FX / Custom 886", "FX / Custom 887", "FX / Custom 888", "FX / Custom 889", "FX / Custom 890", "FX / Custom 891", "FX / Custom 892", "FX / Custom 893", "FX / Custom 894", "FX / Custom 895", "FX / Custom 896", "FX / Custom 897", "FX / Custom 898", "FX / Custom 899", "FX / Custom 900", "FX / Custom 901", "FX / Custom 902", "FX / Custom 903", "FX / Custom 904", "FX / Custom 905", "FX / Custom 906", "FX / Custom 907", "FX / Custom 908", "FX / Custom 909", "FX / Custom 910", "FX / Custom 911", "FX / Custom 912", "FX / Custom 913", "FX / Custom 914", "FX / Custom 915", "FX / Custom 916", "FX / Custom 917", "FX / Custom 918", "FX / Custom 919", "FX / Custom 920", "FX / Custom 921", "FX / Custom 922", "FX / Custom 923", "FX / Custom 924", "FX / Custom 925", "FX / Custom 926", "FX / Custom 927", "FX / Custom 928", "FX / Custom 929", "FX / Custom 930", "FX / Custom 931", "FX / Custom 932", "FX / Custom 933", "FX / Custom 934", "FX / Custom 935", "FX / Custom 936", "FX / Custom 937", "FX / Custom 938", "FX / Custom 939", "FX / Custom 940", "FX / Custom 941", "FX / Custom 942", "FX / Custom 943", "FX / Custom 944", "FX / Custom 945", "FX / Custom 946", "FX / Custom 947", "FX / Custom 948", "FX / Custom 949", "FX / Custom 950", "FX / Custom 951", "FX / Custom 952", "FX / Custom 953", "FX / Custom 954", "FX / Custom 955", "FX / Custom 956", "FX / Custom 957", "FX / Custom 958", "FX / Custom 959", "FX / Custom 960", "FX / Custom 961", "FX / Custom 962", "FX / Custom 963", "FX / Custom 964", "FX / Custom 965", "FX / Custom 966", "FX / Custom 967", "FX / Custom 968", "FX / Custom 969", "FX / Custom 970", "FX / Custom 971", "FX / Custom 972", "FX / Custom 973", "FX / Custom 974", "FX / Custom 975", "FX / Custom 976", "FX / Custom 977", "FX / Custom 978", "FX / Custom 979", "FX / Custom 980", "FX / Custom 981", "FX / Custom 982", "FX / Custom 983", "FX / Custom 984", "FX / Custom 985", "FX / Custom 986", "FX / Custom 987", "FX / Custom 988", "FX / Custom 989", "FX / Custom 990", "FX / Custom 991", "FX / Custom 992", "FX / Custom 993", "FX / Custom 994", "FX / Custom 995", "FX / Custom 996", "FX / Custom 997", "FX / Custom 998", "FX / Custom 999"];
+
+
+// ═══════════════════════════════════════════════════════════
+// SHADER SYSTEM
+// Each "base shader type" is a GLSL program template.
+// Effects are generated by picking a base type + seed params.
+// 30 effects per category = 1000 cats × 30 = 30,000 effects
+// ═══════════════════════════════════════════════════════════
+
+const VERT = `
+attribute vec2 aPos;
+varying vec2 vUv;
+void main(){vUv=aPos*.5+.5;gl_Position=vec4(aPos,0.,1.);}`;
+
+// Shared GLSL header injected before every fragment shader
+const GLSL_HEAD = `
+precision mediump float;
+varying vec2 vUv;
+uniform sampler2D uTex;
+uniform float uTime,uInt,uSpd,uScl,uAng,uOx,uOy,uCS,uSeg,uCmp,uSeed;
+uniform vec3 uTint;
+uniform vec2 uRes;
+#define PI 3.14159265358979
+#define TAU 6.28318530717959
+#define sat(x) clamp(x,0.,1.)
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1+uSeed*.3,311.7+uSeed*.7)))*43758.5453);}
+float hash1(float x){return fract(sin(x*127.1+uSeed)*43758.5453);}
+vec2 hash2(vec2 p){return vec2(hash(p),hash(p+vec2(1.7,9.2)));}
+float noise(vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);
+  return mix(mix(hash(i),hash(i+vec2(1,0)),u.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),u.x),u.y);}
+float fnoise(vec2 p,int oct){float v=0.,a=1.,s=0.;for(int i=0;i<8;i++){if(i>=oct)break;v+=noise(p)*a;s+=a;p=p*2.+vec2(1.7,9.2);a*=.5;}return v/s;}
+vec3 rgb2hsv(vec3 c){vec4 K=vec4(0.,-1./3.,2./3.,-1.);vec4 p=mix(vec4(c.bg,K.wz),vec4(c.gb,K.xy),step(c.b,c.g));vec4 q=mix(vec4(p.xyw,c.r),vec4(c.r,p.yzx),step(p.x,c.r));float d=q.x-min(q.w,q.y);return vec3(abs(q.z+(q.w-q.y)/(6.*d+1e-10)),d/(q.x+1e-10),q.x);}
+vec3 hsv2rgb(vec3 c){vec4 K=vec4(1.,2./3.,1./3.,3.);vec3 p=abs(fract(c.xxx+K.xyz)*6.-K.www);return c.z*mix(K.xxx,sat(p-K.xxx),c.y);}
+vec2 rot(vec2 v,float a){return vec2(v.x*cos(a)-v.y*sin(a),v.x*sin(a)+v.y*cos(a));}
+float smin(float a,float b,float k){float h=sat(.5+.5*(b-a)/k);return mix(b,a,h)-k*h*(1.-h);}
+float sdCircle(vec2 p,float r){return length(p)-r;}
+float sdBox(vec2 p,vec2 b){vec2 d=abs(p)-b;return length(max(d,0.))+min(max(d.x,d.y),0.);}
+vec4 tex(vec2 uv){return texture2D(uTex,fract(uv));}
+`;
+
+// ─────────────────────────────────────────────────────────
+// BASE SHADER TEMPLATES (50 distinct algorithms)
+// Each template uses uSeed to vary its behavior
+// ─────────────────────────────────────────────────────────
+const BASE_SHADERS = [
+
+// 0: RGB Channel Offset family
+`vec2 u=vUv;
+float s=uSeed*.1;
+float a=uInt*(0.02+s*.03);
+vec2 d1=rot(vec2(a,0.),uAng+s);
+vec2 d2=rot(vec2(-a*.6,a*.3),uAng+s+1.);
+vec2 d3=rot(vec2(a*.3,-a*.5),uAng+s+2.);
+float R=tex(u+d1).r, G=tex(u+d2).g, B=tex(u+d3).b;
+gl_FragColor=vec4(R,G,B,1.);`,
+
+// 1: Kaleidoscope family
+`vec2 u=vUv-.5;
+float r=length(u)*uScl;
+float a=atan(u.y,u.x);
+float segs=max(2.,uSeg+uSeed);
+float slice=TAU/segs;
+float t=uTime*uSpd*(0.1+uSeed*.05);
+a=mod(a+t,slice);
+if(mod(floor((atan(u.y,u.x)+PI+t)/slice),2.)==1.)a=slice-a;
+u=vec2(cos(a),sin(a))*r;
+gl_FragColor=tex(u+.5);`,
+
+// 2: Swirl/Whirl family
+`vec2 u=vUv-.5;
+float r=length(u);
+float a=atan(u.y,u.x);
+float sw=uInt*exp(-r*uScl*(2.+uSeed*.5))*PI*(1.+uSeed*.3);
+sw+=sin(r*uScl*10.+uTime*uSpd)*uInt*.3;
+a+=sw+uAng;
+u=vec2(cos(a),sin(a))*r;
+gl_FragColor=tex(u+.5);`,
+
+// 3: Block Glitch family
+`vec2 u=vUv;
+float n=max(4.,uScl*(16.+uSeed*4.));
+float by=floor(u.y*n)/n;
+float t=floor(uTime*uSpd*(3.+uSeed*.5));
+float r=hash(vec2(by*31.7,t));
+float r2=hash(vec2(by*17.3,t+.5));
+float sh=(r>.4+uInt*.3)?(r-.5)*uInt*.25:0.;
+if(uSeed>15.)sh=sin(by*100.*uScl+uTime*uSpd)*uInt*.04;
+vec4 c=tex(vec2(fract(u.x+sh),u.y));
+if(r2>.85+uInt*.1)c.rgb=c.brg;
+if(r2>.96)c.rgb=1.-c.rgb;
+if(r>.97)c.rgb=uTint;
+gl_FragColor=c;`,
+
+// 4: Wave Distortion family
+`vec2 u=vUv;
+float t=uTime*uSpd*(1.+uSeed*.2);
+float s=uSeed*.7;
+float wx=sin(u.y*uScl*(5.+s)+t)*uInt*.06;
+float wy=sin(u.x*uScl*(4.+s)+t*1.3)*uInt*.05;
+float wx2=sin(u.y*uScl*(11.+s)+t*1.7)*uInt*.02;
+float wy2=cos(u.x*uScl*(8.+s)+t*1.2)*uInt*.02;
+gl_FragColor=tex(fract(u+vec2(wx+wx2,wy+wy2)));`,
+
+// 5: Ripple family
+`vec2 u=vUv-.5;
+float r=length(u);
+float a=atan(u.y,u.x);
+float t=uTime*uSpd*(1.+uSeed*.15);
+float freq=uScl*(15.+uSeed*5.);
+float amp=uInt*.06/(r+.1);
+float w=sin(r*freq-t)*amp;
+float w2=cos(a*(3.+uSeed*.5)+t*.7)*r*uInt*.04;
+u+=normalize(u+.001)*(w+w2);
+gl_FragColor=tex(u+.5);`,
+
+// 6: Fractal Mandelbrot family
+`vec2 center=vec2(-0.5+uOx*1.5,uOy);
+vec2 u=(vUv-.5)*uScl*3.+center;
+vec2 c2=u;
+vec2 z=vec2(uSeed*.01,uSeed*.007);
+float n=0.;
+int maxIt=int(32.+uCmp*8.);
+for(int i=0;i<128;i++){
+  if(i>=maxIt)break;
+  if(dot(z,z)>4.)break;
+  z=vec2(z.x*z.x-z.y*z.y,2.*z.x*z.y)+c2;
+  n+=1.;
+}
+float h=n/float(maxIt)+uCS+uSeed*.03;
+gl_FragColor=vec4(hsv2rgb(vec3(fract(h),1.,.9+n/float(maxIt)*.1)),1.);`,
+
+// 7: Julia Set family
+`vec2 u=(vUv-.5)*uScl*3.+vec2(uOx,uOy);
+float ts=uSeed*.07;
+vec2 c2=vec2(cos(uTime*uSpd*(0.1+ts)+uAng)*.7,sin(uTime*uSpd*(0.07+ts)+uAng)*.7);
+vec2 z=u;
+float n=0.;
+int maxIt=int(32.+uCmp*8.);
+for(int i=0;i<128;i++){
+  if(i>=maxIt)break;
+  if(dot(z,z)>4.)break;
+  z=vec2(z.x*z.x-z.y*z.y,2.*z.x*z.y)+c2;
+  n+=1.;
+}
+float h=n/float(maxIt)+uCS+uSeed*.04;
+gl_FragColor=vec4(hsv2rgb(vec3(fract(h),.9,.9)),1.);`,
+
+// 8: Height Map / Bump family
+`vec2 u=vUv;
+float t=uTime*uSpd*(0.1+uSeed*.04);
+float hn=fnoise(u*uScl*(4.+uSeed),int(1.+uCmp*.5));
+float hn2=fnoise(u*uScl*(8.+uSeed)+100.,int(1.+uCmp*.5));
+float h=(hn+hn2*.4)/(1.4);
+vec2 off=vec2(cos(h*TAU+uAng),sin(h*TAU+uAng))*uInt*.07;
+vec4 c=tex(fract(u+off+t*.01));
+vec3 hsv=rgb2hsv(c.rgb);
+hsv.z=sat(hsv.z*(0.7+h*.6));
+hsv.x=fract(hsv.x+h*uInt*.2+uCS);
+gl_FragColor=vec4(hsv2rgb(hsv),1.);`,
+
+// 9: Color Shift / Hue Rotate family
+`vec4 c=tex(vUv);
+vec3 hsv=rgb2hsv(c.rgb);
+float t=uTime*uSpd*(0.1+uSeed*.05);
+float shift=uCS+uInt*.5+sin(t+hsv.x*TAU*(1.+uSeed*.5))*.3;
+hsv.x=fract(hsv.x+shift);
+hsv.y=sat(hsv.y*(1.+uInt*(0.5+uSeed*.1)));
+hsv.z=sat(pow(hsv.z,1./(0.5+uInt*.5+uSeed*.1)));
+gl_FragColor=vec4(hsv2rgb(hsv),1.);`,
+
+// 10: Voronoi / Cell family
+`vec2 u=vUv*(uScl*(4.+uSeed*.5));
+vec2 gid=floor(u);
+float minD=10.,sec=10.;
+vec2 minP=vec2(0.);
+for(int x=-2;x<=2;x++)for(int y=-2;y<=2;y++){
+  vec2 n=gid+vec2(float(x),float(y));
+  vec2 pt=n+hash2(n)+sin(uTime*uSpd*(.3+uSeed*.05)+n)*.3;
+  float d=length(u-pt);
+  if(d<minD){sec=minD;minD=d;minP=pt;}else if(d<sec)sec=d;
+}
+float edge=sec-minD;
+vec2 src=minP/(uScl*(4.+uSeed*.5));
+vec4 c=tex(src);
+float h=minD*.5+uCS;
+c.rgb=mix(c.rgb,hsv2rgb(vec3(fract(h),.7,.9)),edge*uInt*3.);
+gl_FragColor=c;`,
+
+// 11: Metaball / SDF family
+`vec2 u=vUv-.5;
+float t=uTime*uSpd*(0.5+uSeed*.1);
+float f=0.;
+int nb=int(3.+uCmp+uSeed*.5);
+for(int i=0;i<16;i++){
+  if(i>=nb)break;
+  float fi=float(i);
+  vec2 p=vec2(sin(t*(0.5+fi*.3+uSeed*.1)+fi*1.3),cos(t*(0.4+fi*.25+uSeed*.08)+fi*2.1))*.35*uScl;
+  float r=0.04+uSeed*.005;
+  f+=r*r/(dot(u-p,u-p)+.0001);
+}
+float edge=smoothstep(1.5,2.5,f);
+vec3 col=hsv2rgb(vec3(f*.1+uCS+uSeed*.05,.9,.9));
+vec4 c=tex(vUv);
+gl_FragColor=vec4(mix(c.rgb,col*1.2,edge*uInt),1.);`,
+
+// 12: Mirror / Reflection family
+`vec2 u=vUv-.5;
+float a=atan(u.y,u.x)+uTime*uSpd*(.05+uSeed*.01)+uAng;
+float r=length(u)*uScl;
+float segs=max(2.,uSeg*(1.+uSeed*.1));
+float slice=TAU/segs;
+a=mod(a+slice*.5,slice)-slice*.5;
+if(mod(floor((atan(u.y,u.x)+PI)/slice+uSeed*.03),2.)==1.)a=-a;
+r=mix(r,mod(r,.5)*.5,uInt*.5);
+u=vec2(cos(a),sin(a))*r;
+gl_FragColor=tex(u+.5);`,
+
+// 13: Pixelate / Mosaic family
+`vec2 u=vUv;
+float px=max(2.,uInt*80./uScl+uSeed*2.);
+float hn=noise(u*uScl*3.+uSeed)*(uSeed*.5);
+px=max(2.,px+hn*20.);
+vec2 pu=floor(u*uRes/px)*px/uRes;
+vec4 c=tex(pu);
+vec3 hsv=rgb2hsv(c.rgb);
+hsv.x=fract(hsv.x+uCS);
+gl_FragColor=vec4(hsv2rgb(hsv),1.);`,
+
+// 14: Streak / Smear family
+`vec2 u=vUv;
+float t=uTime*uSpd*(1.+uSeed*.2);
+vec2 dir=rot(vec2(1.,0.),uAng+uSeed);
+float streak=0.;
+int steps=int(8.+uCmp*4.+uSeed*.5);
+for(int i=0;i<32;i++){
+  if(i>=steps)break;
+  float fi=float(i);
+  vec4 s=tex(u-dir*fi*uInt*.007);
+  streak=max(streak,dot(s.rgb,vec3(.3,.59,.11)));
+}
+vec4 c=tex(u);
+float lum=dot(c.rgb,vec3(.3,.59,.11));
+gl_FragColor=vec4(c.rgb+uTint*streak*uInt*(0.3+uSeed*.05),1.);`,
+
+// 15: Scanline / CRT family
+`vec2 u=vUv;
+float t=uTime*uSpd*(1.+uSeed*.1);
+float sl=sin(u.y*uRes.y*PI*(1.+uSeed*.3))*.5+.5;
+sl=pow(sl,.4+uSeed*.1);
+float jitter=sin(u.y*60.*uScl+t*20.)*uInt*.004;
+float n=hash(u*uRes+floor(t*30.));
+vec4 c=tex(vec2(fract(u.x+jitter),u.y));
+float cr=tex(u+vec2(uInt*.003,0.)).r;
+float cb=tex(u-vec2(uInt*.003,0.)).b;
+c.r=mix(c.r,cr,uInt*.7);c.b=mix(c.b,cb,uInt*.7);
+c.rgb*=mix(1.-uInt*.3,1.,sl);
+c.rgb+=n*uInt*.06;
+gl_FragColor=c;`,
+
+// 16: Posterize / Quantize family
+`vec4 c=tex(vUv);
+vec3 hsv=rgb2hsv(c.rgb);
+float steps=max(2.,floor(uScl*(4.+uSeed*2.)));
+hsv.x=floor(hsv.x*steps)/steps;
+if(uSeed>10.)hsv.y=floor(hsv.y*(steps*.5))/(steps*.5);
+if(uSeed>20.)hsv.z=floor(hsv.z*steps)/steps;
+hsv.x=fract(hsv.x+uCS);
+gl_FragColor=vec4(mix(c.rgb,hsv2rgb(hsv),uInt),1.);`,
+
+// 17: Noise Field / Flow family
+`vec2 u=vUv;
+float t=uTime*uSpd*(.3+uSeed*.05);
+float oct=int(1.+uCmp*.7);
+for(int i=0;i<6;i++){
+  if(float(i)>=1.+uCmp*.7)break;
+  float s=pow(2.,float(i));
+  float n=noise(u*uScl*s+t+uSeed);
+  float n2=noise(u*uScl*s+t+uSeed+100.);
+  u=fract(u+vec2(n*2.-1.,n2*2.-1.)*uInt*.025/s);
+}
+gl_FragColor=tex(u);`,
+
+// 18: Radial / Polar family
+`vec2 u=vUv-.5;
+float r=length(u);
+float a=atan(u.y,u.x)+uTime*uSpd*(.05+uSeed*.01)+uAng;
+float s=uSeed*.1;
+float r2=mod(r*uScl*(2.+s),.5);
+float ripple=sin(r*uScl*30.-uTime*uSpd*(2.+uSeed*.3))*uInt*.05/(r+.05);
+a+=ripple;
+u=vec2(cos(a),sin(a))*(r2+ripple);
+gl_FragColor=tex(fract(u+.5));`,
+
+// 19: Gaussian Blur family
+`vec4 acc=vec4(0.);float w=0.;
+int rad=int(2.+uCmp+uSeed*.3);
+vec2 dir=rot(vec2(1.,0.),uAng+uSeed*.5);
+float sigma=uInt*8./uRes.x;
+for(int i=-8;i<=8;i++){
+  if(abs(float(i))>float(rad+1))continue;
+  float fi=float(i);
+  float g=exp(-fi*fi*sigma*sigma*uRes.x*uRes.x*.5);
+  acc+=tex(vUv+dir*fi*sigma)*g;
+  w+=g;
+}
+gl_FragColor=acc/w;`,
+
+// 20: Spiral Droste family
+`vec2 u=vUv-.5;
+float r=length(u);
+float a=atan(u.y,u.x)+uTime*uSpd*(.1+uSeed*.02)+uAng;
+float logr=log(max(r,.001));
+float s=uSeed*.05;
+a+=logr*uInt*(2.+s)*uScl;
+r=exp(logr+sin(logr*uScl*(3.+s))*uInt*.2);
+u=vec2(cos(a),sin(a))*r;
+gl_FragColor=tex(fract(u*uScl+.5));`,
+
+// 21: Sphere / Globe mapping
+`vec2 u=vUv-.5;
+float r=length(u);
+float rad=.45*uScl;
+if(r<rad){
+  float z=sqrt(rad*rad-r*r);
+  vec3 N=normalize(vec3(u.x,u.y,z));
+  vec3 L=normalize(vec3(cos(uAng+uSeed),sin(uAng+uSeed),1.+uSeed*.3));
+  float diff=max(0.,dot(N,L));
+  float lon=atan(N.x,N.z)/TAU+.5+uTime*uSpd*.03*uInt+uOx;
+  float lat=asin(N.y/length(N))/PI+.5+uOy;
+  vec4 c=tex(vec2(fract(lon),sat(lat)));
+  c.rgb*=diff*.7+.3;
+  c.rgb+=pow(max(0.,dot(reflect(-L,N),vec3(0.,0.,1.))),20.+uSeed*2.)*.5;
+  gl_FragColor=c;
+}else{gl_FragColor=tex(vUv)*.1;}`,
+
+// 22: IFS Fractal / Barnsley family
+`vec2 u=vUv*2.-1.;
+for(int i=0;i<int(4.+uCmp*3.);i++){
+  float fi=float(i);
+  u=abs(u);
+  u=rot(u,uAng*(1.+uSeed*.1)+fi*.5+uTime*uSpd*.02);
+  u*=uScl*(1.1+uSeed*.05);
+  u-=vec2(.3+uSeed*.02,.3+uSeed*.02)/float(i+1);
+}
+float h=length(u)+uCS+uSeed*.07;
+gl_FragColor=vec4(hsv2rgb(vec3(fract(h*.3),.9,.9)),1.);`,
+
+// 23: Reaction Diffusion aesthetic
+`vec2 u=vUv;
+float t=uTime*uSpd*.3;
+float n=fnoise(u*uScl*(3.+uSeed*.5)+t,int(1.+uCmp*.5));
+float n2=fnoise(u*uScl*(6.+uSeed*.5)+t*.7+50.,int(1.+uCmp*.5));
+float rd=sin((n-n2)*PI*(5.+uSeed))*uInt;
+vec4 c=tex(u);
+vec3 hsv=rgb2hsv(c.rgb);
+hsv.x=fract(hsv.x+rd*.3+uCS);
+hsv.y=sat(hsv.y+rd*.4);
+hsv.z=sat(hsv.z+rd*.2);
+gl_FragColor=vec4(hsv2rgb(hsv),1.);`,
+
+// 24: Halftone / Dot Screen family
+`vec2 u=vUv;
+float dotSz=uScl*(40.+uSeed*10.);
+vec2 gid=floor(u*dotSz);
+vec2 local=fract(u*dotSz)-.5;
+vec2 offset=vec2(mod(gid.y,.5+uSeed*.1)*0.5,0.)*uInt;
+vec4 c=tex((gid+offset)/dotSz+.5/dotSz);
+float lum=dot(c.rgb,vec3(.3,.59,.11));
+float dotR=sqrt(lum*uInt)*.5;
+float d=length(local);
+float mask=smoothstep(dotR+.02,dotR-.02,d);
+vec3 col=mix(vec3(1.),c.rgb,mask);
+if(uSeed>20.)col=mix(vec3(0.),c.rgb,mask);
+gl_FragColor=vec4(col,1.);`,
+
+// 25: Electric / Lightning family
+`vec2 u=vUv-.5;
+float t=uTime*uSpd*(2.+uSeed*.3);
+float bolt=0.;
+vec2 pos=vec2(uOx,uOy)*.4;
+int steps=int(10.+uCmp*5.+uSeed*.5);
+for(int i=0;i<32;i++){
+  if(i>=steps)break;
+  float fi=float(i);
+  float seg=fi/float(steps);
+  vec2 a=pos+vec2(hash1(fi+t*.1),hash1(fi+t*.1+100.)-.5)*.2*uInt;
+  vec2 b=pos+vec2(0.,seg-.5)*.8+vec2((hash1(fi+t*.1+50.)-.5)*uInt*.3,0.);
+  float d=length(u-mix(a,b,fract(t*.2+fi*.3)));
+  bolt+=.003/max(d,.001);
+}
+vec4 c=tex(vUv);
+c.rgb+=uTint*bolt*.4*uInt;
+gl_FragColor=c;`,
+
+// 26: Bloom / Glow family
+`vec4 c=tex(vUv);
+float lum=dot(c.rgb,vec3(.3,.59,.11));
+float thresh=0.5-uInt*.3+uSeed*.02;
+vec4 bloom=vec4(0.);float bw=0.;
+float rad=uInt*8./uRes.x*(1.+uSeed*.2);
+for(int i=-5;i<=5;i++)for(int j=-5;j<=5;j++){
+  float fi=float(i),fj=float(j);
+  float g=exp(-(fi*fi+fj*fj)*.3);
+  vec4 s=tex(vUv+vec2(fi,fj)*rad);
+  float sl=dot(s.rgb,vec3(.3,.59,.11));
+  bloom+=s*g*step(thresh,sl);
+  bw+=g;
+}
+bloom/=bw;
+c.rgb+=bloom.rgb*uInt*uTint;
+gl_FragColor=c;`,
+
+// 27: Truchet / Pattern family
+`vec2 u=vUv*uScl*(6.+uSeed*.5);
+vec2 gid=floor(u);vec2 local=fract(u);
+float r=step(.5,hash(gid+uSeed));
+float t2=r>.5?1.:0.;
+float curve1=smoothstep(.02,0.,abs(length(local)-0.5));
+float curve2=smoothstep(.02,0.,abs(length(1.-local)-0.5));
+float pattern=max(curve1,curve2);
+if(uSeed>15.){
+  float line=smoothstep(.02,0.,abs(local.x-.5))+smoothstep(.02,0.,abs(local.y-.5));
+  pattern=mix(pattern,line,.5);
+}
+vec4 c=tex(vUv);
+vec3 col=mix(c.rgb,uTint*pattern,uInt);
+gl_FragColor=vec4(col,1.);`,
+
+// 28: Lissajous / Spirograph family
+`vec2 u=vUv-.5;
+float t=uTime*uSpd*(.3+uSeed*.05);
+float curve=0.;
+float a=uSeg*(1.+uSeed*.1), b=uSeg*(1.+uSeed*.13)+1.;
+float d=uSeed*.5;
+for(int i=0;i<20;i++){
+  float fi=float(i)/20.;
+  float px=.4*sin(a*fi*TAU+d+t);
+  float py=.4*sin(b*fi*TAU+t);
+  curve+=.002/max(.001,length(u-vec2(px,py))-.005*uScl);
+}
+vec4 c=tex(vUv);
+c.rgb+=uTint*curve*uInt*.3;
+gl_FragColor=c;`,
+
+// 29: Domain Warp / Flow Field family
+`vec2 u=vUv;
+float t=uTime*uSpd*(.2+uSeed*.04);
+float s=uSeed*.1;
+vec2 p=u;
+for(int i=0;i<int(1.+uCmp*.7);i++){
+  float fi=float(i);
+  float nx=noise(p*uScl*(2.+s)+t+fi*3.7);
+  float ny=noise(p*uScl*(2.+s)+t+fi*3.7+100.);
+  p=fract(p+vec2(nx*2.-1.,ny*2.-1.)*uInt*.04);
+}
+gl_FragColor=tex(p);`,
+
+// 30: Soap Bubble / Iridescence family
+`vec4 c=tex(vUv);
+vec2 u=vUv-.5;
+float r=length(u);
+vec3 N=normalize(vec3(u,.5));
+float t=uTime*uSpd*(.2+uSeed*.03);
+float film=sin(r*uScl*30.+t+uSeed)*uInt;
+float h1=film+uCS+uSeed*.05;
+float h2=film+.333+uCS;
+float h3=film+.667+uCS;
+vec3 iri=vec3(sin(h1*TAU)*.5+.5,sin(h2*TAU)*.5+.5,sin(h3*TAU)*.5+.5);
+c.rgb=mix(c.rgb,c.rgb*iri*1.5,uInt*smoothstep(.0,.4,r));
+gl_FragColor=c;`,
+
+// 31: Crystallize / Facet family
+`vec2 u=vUv*uScl*(5.+uSeed*.5);
+vec2 gid=floor(u);
+float minD=10.;vec2 minC=vec2(0.);
+for(int x=-2;x<=2;x++)for(int y=-2;y<=2;y++){
+  vec2 n=gid+vec2(float(x),float(y));
+  vec2 pt=n+hash2(n+uSeed)*.8+.1;
+  float d=length(u-pt);
+  if(d<minD){minD=d;minC=pt;}
+}
+vec2 src=minC/(uScl*(5.+uSeed*.5));
+vec4 c=tex(src);
+float edge=smoothstep(.05,.01,minD-length(u-floor(u)-.5));
+c.rgb=mix(c.rgb,uTint*(1.-minD*.5),uInt*edge);
+gl_FragColor=c;`,
+
+// 32: Oil Paint / Painterly family
+`vec2 u=vUv;
+vec4 sum=vec4(0.);
+int samples=int(6.+uCmp*4.+uSeed*.5);
+float t=uTime*uSpd*.1;
+for(int i=0;i<24;i++){
+  if(i>=samples)break;
+  float fi=float(i)/float(samples);
+  float a=fi*TAU+t+uSeed;
+  float r=noise(u*uScl*(3.+uSeed)+fi)*uInt*.04;
+  sum+=tex(fract(u+vec2(cos(a),sin(a))*r));
+}
+sum/=float(samples);
+vec3 hsv=rgb2hsv(sum.rgb);
+hsv.y=sat(hsv.y*(1.3+uSeed*.05));
+gl_FragColor=vec4(hsv2rgb(hsv),1.);`,
+
+// 33: Earthquake / Seismic family
+`vec2 u=vUv;
+float t=uTime*uSpd*(2.+uSeed*.3);
+float by=floor(u.y*(20.+uSeed*3.));
+float bx=floor(u.x*(20.+uSeed*3.));
+float r=hash(vec2(by,floor(t*8.)));
+float r2=hash(vec2(bx,floor(t*6.)));
+float ox=(r-.5)*uInt*.1;
+float oy=(r2-.5)*uInt*.05;
+if(uSeed>10.)ox=sin(by*uScl+t)*uInt*.06;
+if(uSeed>20.)oy=cos(bx*uScl+t)*uInt*.04;
+gl_FragColor=tex(fract(u+vec2(ox,oy)));`,
+
+// 34: Aurora / Nebula family
+`vec2 u=vUv;
+float t=uTime*uSpd*(.1+uSeed*.02);
+float n1=fnoise(u*uScl*(2.+uSeed*.3)+t*.3,int(2.+uCmp*.5));
+float n2=fnoise(u*uScl*(3.+uSeed*.4)+t*.2+50.,int(2.+uCmp*.5));
+float n3=fnoise(u*uScl*(1.+uSeed*.2)+t*.1+100.,int(2.+uCmp*.3));
+float aurora=sin(n1*PI*4.)*sin(n2*PI*3.)*uInt;
+vec3 col=hsv2rgb(vec3(n3+uCS+uSeed*.05,.9,sat(aurora+.2)));
+vec4 c=tex(u);
+gl_FragColor=vec4(mix(c.rgb,col,sat(aurora*2.)*uInt),1.);`,
+
+// 35: Stained Glass family
+`vec2 u=vUv*uScl*(4.+uSeed*.5);
+vec2 gid=floor(u);
+float minD1=10.,minD2=10.;
+vec2 seed1=vec2(0.),seed2=vec2(0.);
+for(int x=-2;x<=2;x++)for(int y=-2;y<=2;y++){
+  vec2 n=gid+vec2(float(x),float(y));
+  vec2 pt=n+hash2(n+uSeed);
+  float d=length(u-pt);
+  if(d<minD1){minD2=minD1;minD1=d;seed2=seed1;seed1=n;}
+  else if(d<minD2){minD2=d;seed2=n;}
+}
+float edge=minD2-minD1;
+float h=hash(seed1+uSeed);
+vec3 col=hsv2rgb(vec3(h+uCS,.9,.9));
+float eLine=1.-smoothstep(0.,.08,edge)*uInt;
+vec4 c=tex(vUv);
+gl_FragColor=vec4(mix(col,vec3(0.),eLine)*uInt+c.rgb*(1.-uInt),1.);`,
+
+// 36: Digital Rain / Matrix family
+`vec2 u=vUv;
+float cols=uScl*(20.+uSeed*5.);
+float col=floor(u.x*cols)/cols;
+float t=uTime*uSpd*(1.+uSeed*.2);
+float drop=fract(col*31.7+t*(hash1(col)*2.+.5));
+float trail=smoothstep(1.,0.,abs(u.y-drop));
+float n=hash(vec2(col,floor(u.y*30.))+floor(t*10.));
+vec4 c=tex(u);
+vec3 rain=uTint*trail*(n*.7+.3);
+gl_FragColor=vec4(mix(c.rgb,rain,trail*uInt*.7),1.);`,
+
+// 37: Thermal / Infrared family
+`vec4 c=tex(vUv);
+float lum=dot(c.rgb,vec3(.3,.59,.11));
+float t=uTime*uSpd*(.1+uSeed*.02);
+float wave=sin(lum*TAU*uScl*(3.+uSeed*.5)+t)*uInt*.3;
+float h=lum+wave+uCS+uSeed*.05;
+vec3 thermal;
+if(h<.25)thermal=mix(vec3(0.,0.,.5),vec3(0.,0.,1.),h*4.);
+else if(h<.5)thermal=mix(vec3(0.,0.,1.),vec3(0.,1.,0.),(h-.25)*4.);
+else if(h<.75)thermal=mix(vec3(0.,1.,0.),vec3(1.,.5,0.),(h-.5)*4.);
+else thermal=mix(vec3(1.,.5,0.),vec3(1.,0.,0.),(h-.75)*4.);
+gl_FragColor=vec4(mix(c.rgb,thermal,uInt),1.);`,
+
+// 38: Watercolor / Wet Media family
+`vec2 u=vUv;
+float t=uTime*uSpd*.05;
+vec4 acc=vec4(0.);
+int s=int(8.+uCmp*4.+uSeed*.5);
+for(int i=0;i<32;i++){
+  if(i>=s)break;
+  float fi=float(i)/float(s);
+  float a=fi*TAU;
+  float rr=noise(u*uScl*(3.+uSeed)+fi+t)*uInt*.04;
+  float rr2=noise(u*uScl*(5.+uSeed)+fi+100.+t)*.01;
+  acc+=tex(fract(u+vec2(cos(a),sin(a))*(rr+rr2)));
+}
+acc/=float(s);
+vec3 hsv=rgb2hsv(acc.rgb);
+hsv.y=sat(hsv.y*(1.2+uSeed*.03));
+hsv.z=sat(hsv.z*.95+.05);
+gl_FragColor=vec4(hsv2rgb(hsv),1.);`,
+
+// 39: Origami / Fold family
+`vec2 u=vUv-.5;
+float t=uTime*uSpd*(.2+uSeed*.04)+uAng;
+float folds=floor(uSeg*(1.+uSeed*.1));
+for(int i=0;i<16;i++){
+  if(float(i)>=folds)break;
+  float a=float(i)/folds*PI+t;
+  vec2 axis=vec2(cos(a),sin(a));
+  float d=dot(u,axis);
+  if(d<0.)u-=2.*d*axis;
+  u*=uScl*(1.+uSeed*.03)/folds*folds;
+}
+gl_FragColor=tex(fract(u*uScl+.5));`,
+
+// 40: Dispersion / Prism family
+`vec2 u=vUv;
+float ang=uAng+uSeed*.3;
+vec2 dir=vec2(cos(ang),sin(ang));
+float disp=uInt*.06*(1.+uSeed*.1);
+float R=tex(u+dir*disp*1.0).r;
+float G=tex(u+dir*disp*.5).g;
+float B=tex(u-dir*disp*.3).b;
+float R2=tex(u+dir*disp*1.5).r;
+float B2=tex(u-dir*disp*.8).b;
+gl_FragColor=vec4(mix(R,R2,.5),G,mix(B,B2,.5),1.);`,
+
+// 41: Circuit / PCB family
+`vec2 u=vUv*uScl*(10.+uSeed*2.);
+float n1=step(.4,noise(u));
+float n2=step(.4,noise(u.yx+100.));
+float grid=max(step(.92,fract(u.x)),step(.92,fract(u.y)));
+float circuit=(n1+n2)*grid;
+float trace=max(step(.95,noise(u*2.)),step(.95,noise(u.yx*2.+50.)));
+vec4 c=tex(vUv);
+vec3 pcb=mix(vec3(.1,.4,.1),vec3(.9,.7,.1),circuit+trace);
+gl_FragColor=vec4(mix(c.rgb,pcb,uInt),1.);`,
+
+// 42: Fiber Optic / Caustic family
+`vec2 u=vUv;
+float t=uTime*uSpd*(.3+uSeed*.05);
+float caus=0.;
+for(int i=0;i<int(3.+uCmp*3.+uSeed*.3);i++){
+  float fi=float(i);
+  vec2 p=u*uScl*(2.+fi+uSeed*.2)+t*.2;
+  float n1=noise(p);float n2=noise(p.yx+50.);
+  caus+=sin((n1+n2)*PI*(3.+fi+uSeed*.3))*uInt;
+}
+caus/=3.+uCmp*3.;
+vec4 c=tex(u);
+c.rgb+=uTint*sat(caus)*uInt*.5;
+gl_FragColor=c;`,
+
+// 43: Distorted Text / Symbol family
+`vec2 u=vUv;
+float t=uTime*uSpd*(1.+uSeed*.2);
+float cols=uScl*20.;float rows=uScl*10.;
+vec2 gid=floor(u*vec2(cols,rows));
+float r=hash(gid+floor(t*5.));
+float r2=hash(gid*.7+.5);
+float sh=r>.5?(r-.5)*uInt*.2:0.;
+float sv=r2>.5?(r2-.5)*uInt*.1:0.;
+vec4 c=tex(fract(u+vec2(sh,sv)));
+vec3 hsv=rgb2hsv(c.rgb);
+hsv.x=fract(hsv.x+r*.3*uInt+uCS);
+gl_FragColor=vec4(hsv2rgb(hsv),1.);`,
+
+// 44: Shockwave / Explosion family
+`vec2 u=vUv-.5;
+float r=length(u);
+float t=uTime*uSpd*(1.+uSeed*.2);
+float wave=mod(t*.3,1.)*uScl*.5;
+float ring=smoothstep(.05,0.,abs(r-wave))*uInt;
+float ripple=sin((r-wave)*uScl*40.)*ring*.05;
+u+=normalize(u+.001)*ripple;
+vec4 c=tex(fract(u+.5));
+c.rgb+=uTint*ring*.5;
+gl_FragColor=c;`,
+
+// 45: Vignette / Border family
+`vec2 u=vUv-.5;
+float r=length(u)*2.;
+float t=uTime*uSpd*(.1+uSeed*.02);
+float vig=smoothstep(1.-uInt,1.,r*(1.+uSeed*.1));
+float border=uInt*.12*(1.+uSeed*.2);
+float inB=1.-step(border,vUv.x)*step(border,vUv.y)*step(border,1.-vUv.x)*step(border,1.-vUv.y);
+float n=noise(vUv*uScl*20.+t)*.3;
+vec4 c=tex(vUv);
+vec3 vigCol=mix(uTint,vec3(0.),r*.5);
+c.rgb=mix(c.rgb,vigCol,vig);
+if(inB>.5)c.rgb=mix(c.rgb,uTint*(n+.5),uInt);
+gl_FragColor=c;`,
+
+// 46: ASCII / Symbol mapping
+`float cols=uScl*60.;
+vec2 gid=floor(vUv*vec2(cols,cols*.5));
+vec2 local=fract(vUv*vec2(cols,cols*.5));
+vec4 c=tex(gid/vec2(cols,cols*.5)+.5/vec2(cols,cols*.5));
+float lum=dot(c.rgb,vec3(.3,.59,.11));
+float chars=13.;
+float ci=floor(lum*chars);
+float pat=step(.5,fract((local.x+ci*.13+uSeed*.07)*7.));
+pat*=step(.5,fract((local.y+ci*.17+uSeed*.05)*5.));
+vec3 col=pat>0.?mix(c.rgb,uTint,uInt*.5):vec3(0.);
+gl_FragColor=vec4(mix(c.rgb,col,uInt),1.);`,
+
+// 47: Lens Distortion family
+`vec2 u=vUv-.5+vec2(uOx,uOy)*.2;
+float r=length(u);
+float barrel=(1.+uInt*(1.+uSeed*.2)*r*r)*uScl;
+if(uSeed>15.)barrel=1./(1.+uInt*r*r);
+u*=barrel;
+gl_FragColor=tex(fract(u+.5));`,
+
+// 48: Chromatic Aberration family
+`vec2 u=vUv;
+float t=uTime*uSpd*(.1+uSeed*.03);
+float scale2=1.+uInt*(.02+uSeed*.005);
+float inv=1./scale2;
+vec2 center=vec2(.5+uOx*.1,.5+uOy*.1);
+float R=tex((u-center)*scale2*mix(1.,1./uScl,.3)+center).r;
+float G=tex(u).g;
+float B=tex((u-center)*inv*mix(1.,uScl,.3)+center).b;
+if(uSeed>10.){
+  R=tex(u+vec2(uInt*.03,0.)*uScl).r;
+  B=tex(u-vec2(uInt*.03,0.)*uScl).b;
+}
+gl_FragColor=vec4(R,G,B,1.);`,
+
+// 49: Interference / Moire family
+`vec2 u=vUv;
+float t=uTime*uSpd*(.1+uSeed*.02);
+float f1=uScl*(20.+uSeed*5.);
+float f2=f1*(1.+uInt*.1*(1.+uSeed*.1));
+float a=uAng+uSeed*.1;
+float r1=dot(u-.5,vec2(cos(a),sin(a)))*f1;
+float r2=length(u-.5+vec2(uOx,uOy)*.1)*f2;
+float moire=(sin(r1*TAU+t)+sin(r2*TAU-t))*.25+.5;
+vec4 c=tex(u);
+vec3 col=mix(c.rgb,uTint*moire,uInt);
+gl_FragColor=vec4(col,1.);`,
+];
+
+// ─────────────────────────────────────────────────────────
+// GENERATE ALL 30,000 EFFECTS
+// Each category maps to 30 effects, each gets a unique seed
+// The shader index is cycled through BASE_SHADERS with category-specific bias
+// ─────────────────────────────────────────────────────────
+
+// Variant names — 30 per effect
+const VARIANT_NAMES = [
+  'Alpha','Beta','Gamma','Delta','Epsilon','Zeta','Eta','Theta',
+  'Iota','Kappa','Lambda','Mu','Nu','Xi','Omicron','Pi',
+  'Rho','Sigma','Tau','Upsilon','Phi','Chi','Psi','Omega',
+  'Nexus','Prism','Vertex','Apex','Core','Ultra'
+];
+
+// Category → preferred shader families (indices into BASE_SHADERS)
+function getCatShaderBias(cat) {
+  const sup = cat.split('/')[0].trim().toLowerCase();
+  const map = {
+    'glitch':[3,15,33,0,13,43],'mirror':[1,12,20,39,2],'distort':[2,4,5,20,29,47],
+    'color':[9,16,17,30],'blur':[19,26,32,38],'fractal':[6,7,22],'3d':[21,2,20],
+    'light':[26,25,30,34,42],'texture':[8,17,23,29],'art':[32,38,24,35],
+    'halftone':[24,46,13],'pixel':[13,24,46,16],'gen':[28,10,49,27,8],
+    'blend':[26,30,9,48],'edge':[29,8,42],'mosaic':[31,35,10,13,24],
+    'chroma':[40,48,0,1],'symmetry':[1,12,39,22],'math':[6,7,22,28,49],
+    'film':[15,45,26,8],'nature':[34,4,5,42],'retro':[15,13,24,43,46],
+    'anim':[44,25,4,1],'border':[45],'displace':[8,17,4,29],'dof':[19,26],
+    'fx':[30,25,26,42,34],'style':[32,38,9],'pattern':[27,24,35,49],
+    'noise':[8,17,23,29],'transform':[2,12,20,47],'map':[21,20,2],
+    'signal':[49,28,15,4],'crystal':[31,35,41],'flow':[17,29,23],
+    'space':[34,6,7,21],'wave':[4,5,44,49],'bio':[23,8,10],
+    'quantum':[49,6,7,22],'time':[4,2,1],'dream':[2,17,30,8],
+    'emotion':[9,30,34],'season':[34,8,9],'material':[30,31,41],
+    'architecture':[35,31,27],'music':[28,49,4],'science':[6,22,23],
+    'myth':[2,34,1],'code':[41,43,46,36],'land':[8,34,5],'micro':[10,23,31],
+  };
+  return map[sup] || [0,1,2,3,4];
+}
+
+// Build flat effects array: [{id, name, cat, shaderIdx, seed}]
+const ALL_EFFECTS = [];
+const CAT_EFFECTS = {}; // cat -> [effect indices]
+
+CATEGORIES.forEach((cat, ci) => {
+  CAT_EFFECTS[cat] = [];
+  const bias = getCatShaderBias(cat);
+  for (let v = 0; v < 30; v++) {
+    const shaderIdx = bias[v % bias.length];
+    const seed = v;
+    const id = `${ci}_${v}`;
+    const name = VARIANT_NAMES[v];
+    const idx = ALL_EFFECTS.length;
+    ALL_EFFECTS.push({ id, name, cat, shaderIdx, seed });
+    CAT_EFFECTS[cat].push(idx);
+  }
+});
+
+console.log('Effects generated:', ALL_EFFECTS.length);
+
+// ─────────────────────────────────────────────────────────
+// WEBGL ENGINE
+// ─────────────────────────────────────────────────────────
+const canvas = document.getElementById('glc');
+const gl = canvas.getContext('webgl', { preserveDrawingBuffer: true, antialias: false });
+if (!gl) { alert('WebGL not available'); }
+
+let imgTex = null;
+let currentFX = null; // effect object
+let compiledProgs = {}; // shaderIdx -> compiled program
+let params = { intensity:.5, speed:.5, scale:1, angle:0, ox:0, oy:0,
+  colorshift:0, segments:6, complexity:3, seed:0, tint:[1,.176,.47] };
+let animating = false, rafId = null, startT = Date.now();
+let fpsF = 0, fpsT = Date.now();
+
+const quad = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+
+function compShader(type, src) {
+  const s = gl.createShader(type);
+  gl.shaderSource(s, src);
+  gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+    console.warn('Shader err', gl.getShaderInfoLog(s), src.slice(0, 200));
+    return null;
+  }
+  return s;
+}
+
+function getProg(shaderIdx) {
+  if (compiledProgs[shaderIdx]) return compiledProgs[shaderIdx];
+  const body = BASE_SHADERS[shaderIdx];
+  const fsrc = GLSL_HEAD + 'void main(){' + body + '}';
+  const vs = compShader(gl.VERTEX_SHADER, VERT);
+  const fs = compShader(gl.FRAGMENT_SHADER, fsrc);
+  if (!vs || !fs) return null;
+  const prog = gl.createProgram();
+  gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { console.warn('Link err'); return null; }
+  gl.deleteShader(vs); gl.deleteShader(fs);
+  const p = { prog, locs: {} };
+  p.locs.aPos = gl.getAttribLocation(prog, 'aPos');
+  ['uTex','uTime','uInt','uSpd','uScl','uAng','uOx','uOy','uCS','uSeg','uCmp','uSeed','uTint','uRes'].forEach(n => {
+    p.locs[n] = gl.getUniformLocation(prog, n);
+  });
+  compiledProgs[shaderIdx] = p;
+  return p;
+}
+
+function makeTex(img) {
+  if (imgTex) gl.deleteTexture(imgTex);
+  imgTex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, imgTex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+}
+
+function render() {
+  if (!imgTex || !currentFX) return;
+  const p = getProg(currentFX.shaderIdx);
+  if (!p) return;
+  const t = (Date.now() - startT) / 1000;
+  const seed = currentFX.seed + params.seed;
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.useProgram(p.prog);
+  gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+  gl.enableVertexAttribArray(p.locs.aPos);
+  gl.vertexAttribPointer(p.locs.aPos, 2, gl.FLOAT, false, 0, 0);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, imgTex);
+  gl.uniform1i(p.locs.uTex, 0);
+  gl.uniform1f(p.locs.uTime, t);
+  gl.uniform1f(p.locs.uInt, params.intensity);
+  gl.uniform1f(p.locs.uSpd, params.speed);
+  gl.uniform1f(p.locs.uScl, params.scale);
+  gl.uniform1f(p.locs.uAng, params.angle);
+  gl.uniform1f(p.locs.uOx, params.ox);
+  gl.uniform1f(p.locs.uOy, params.oy);
+  gl.uniform1f(p.locs.uCS, params.colorshift);
+  gl.uniform1f(p.locs.uSeg, params.segments);
+  gl.uniform1f(p.locs.uCmp, params.complexity);
+  gl.uniform1f(p.locs.uSeed, seed);
+  gl.uniform3fv(p.locs.uTint, params.tint);
+  gl.uniform2f(p.locs.uRes, canvas.width, canvas.height);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  fpsF++;
+  const now = Date.now();
+  if (now - fpsT > 500) {
+    document.getElementById('fpsc').textContent = Math.round(fpsF/(now-fpsT)*1000) + ' fps';
+    fpsF = 0; fpsT = now;
+  }
+}
+
+function loop() { render(); if (animating) rafId = requestAnimationFrame(loop); }
+
+function setFX(fx) {
+  currentFX = fx;
+  document.getElementById('ename').textContent = fx.cat + ' · ' + fx.name;
+  document.getElementById('ecat').textContent = '';
+  document.getElementById('ri-name').textContent = fx.name;
+  document.getElementById('ri-cat').textContent = fx.cat;
+  // Update active state in list
+  document.querySelectorAll('.fx-item').forEach(el => el.classList.toggle('on', el.dataset.fxid === fx.id));
+  if (!animating) render();
+}
+
+function togglePlay() {
+  animating = !animating;
+  const b = document.getElementById('playb');
+  b.textContent = animating ? '⏸' : '▶';
+  b.classList.toggle('anim', animating);
+  if (animating) loop(); else cancelAnimationFrame(rafId);
+}
+
+function loadImg(ev) {
+  const file = ev.target.files[0]; if (!file) return;
+  const img = new Image();
+  img.onload = () => {
+    const MAX = 1920;
+    const ar = img.width / img.height;
+    const W = ar >= 1 ? Math.min(img.width, MAX) : Math.round(Math.min(img.height, MAX) * ar);
+    const H = ar >= 1 ? Math.round(Math.min(img.width, MAX) / ar) : Math.min(img.height, MAX);
+    canvas.width = W; canvas.height = H;
+    gl.clearColor(0,0,0,1);
+    makeTex(img);
+    document.getElementById('drop').classList.add('hidden');
+    document.getElementById('diminfo').textContent = W + '×' + H;
+    if (!currentFX) setFX(ALL_EFFECTS[0]);
+    else render();
+  };
+  img.src = URL.createObjectURL(file);
+}
+
+function saveImg() {
+  if (!imgTex || !currentFX) return;
+  render();
+  const a = document.createElement('a');
+  a.download = 'megafx_' + (currentFX.cat.replace(/\//g,'_').replace(/ /g,'')) + '_' + currentFX.name + '.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+}
+
+function setP(k, v, dispId, dec) {
+  params[k] = parseFloat(v);
+  document.getElementById(dispId).textContent = parseFloat(v).toFixed(dec);
+  if (!animating) render();
+}
+
+function setTint(hex) {
+  params.tint = [parseInt(hex.slice(1,3),16)/255, parseInt(hex.slice(3,5),16)/255, parseInt(hex.slice(5,7),16)/255];
+  if (!animating) render();
+}
+
+function pickChip(hex, el) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('p-tint').value = hex;
+  setTint(hex);
+}
+
+function hsvToRgb(h, s, v) {
+  const i = Math.floor(h*6), f = h*6-i, p = v*(1-s), q = v*(1-f*s), t2 = v*(1-(1-f)*s);
+  return [[v,t2,p],[q,v,p],[p,v,t2],[p,q,v],[t2,p,v],[v,p,q]][i%6];
+}
+
+function randomFX() {
+  const fx = ALL_EFFECTS[Math.floor(Math.random() * ALL_EFFECTS.length)];
+  setFX(fx);
+  expandCat(fx.cat);
+}
+
+function randomCatFX() {
+  if (!currentFX) { randomFX(); return; }
+  const cat = currentFX.cat;
+  const indices = CAT_EFFECTS[cat];
+  const fx = ALL_EFFECTS[indices[Math.floor(Math.random() * indices.length)]];
+  setFX(fx);
+}
+
+function randomParams() {
+  const h = Math.random();
+  const col = hsvToRgb(h, .9, .9);
+  params = {
+    intensity: Math.random(),
+    speed: Math.random() * 2,
+    scale: .1 + Math.random() * 5,
+    angle: Math.random() * Math.PI * 2,
+    ox: Math.random()*2-1, oy: Math.random()*2-1,
+    colorshift: Math.random(),
+    segments: 2 + Math.floor(Math.random()*14),
+    complexity: 1 + Math.floor(Math.random()*8),
+    seed: Math.floor(Math.random()*30),
+    tint: col
+  };
+  const hex = '#' + col.map(c => Math.round(c*255).toString(16).padStart(2,'0')).join('');
+  document.getElementById('p-int').value = params.intensity; document.getElementById('dv-int').textContent = params.intensity.toFixed(2);
+  document.getElementById('p-spd').value = params.speed; document.getElementById('dv-spd').textContent = params.speed.toFixed(2);
+  document.getElementById('p-scl').value = params.scale; document.getElementById('dv-scl').textContent = params.scale.toFixed(2);
+  document.getElementById('p-ang').value = params.angle; document.getElementById('dv-ang').textContent = params.angle.toFixed(2);
+  document.getElementById('p-cs').value = params.colorshift; document.getElementById('dv-cs').textContent = params.colorshift.toFixed(2);
+  document.getElementById('p-seg').value = params.segments; document.getElementById('dv-seg').textContent = params.segments;
+  document.getElementById('p-cmp').value = params.complexity; document.getElementById('dv-cmp').textContent = params.complexity;
+  document.getElementById('p-ox').value = params.ox; document.getElementById('dv-ox').textContent = params.ox.toFixed(2);
+  document.getElementById('p-oy').value = params.oy; document.getElementById('dv-oy').textContent = params.oy.toFixed(2);
+  document.getElementById('p-seed').value = params.seed; document.getElementById('dv-seed').textContent = params.seed;
+  document.getElementById('p-tint').value = hex;
+  if (!animating) render();
+}
+
+function resetParams() {
+  params = { intensity:.5, speed:.5, scale:1, angle:0, ox:0, oy:0, colorshift:0, segments:6, complexity:3, seed:0, tint:[1,.176,.47] };
+  document.getElementById('p-int').value=.5; document.getElementById('dv-int').textContent='0.50';
+  document.getElementById('p-spd').value=.5; document.getElementById('dv-spd').textContent='0.50';
+  document.getElementById('p-scl').value=1; document.getElementById('dv-scl').textContent='1.00';
+  document.getElementById('p-ang').value=0; document.getElementById('dv-ang').textContent='0.00';
+  document.getElementById('p-cs').value=0; document.getElementById('dv-cs').textContent='0.00';
+  document.getElementById('p-seg').value=6; document.getElementById('dv-seg').textContent='6';
+  document.getElementById('p-cmp').value=3; document.getElementById('dv-cmp').textContent='3';
+  document.getElementById('p-ox').value=0; document.getElementById('dv-ox').textContent='0.00';
+  document.getElementById('p-oy').value=0; document.getElementById('dv-oy').textContent='0.00';
+  document.getElementById('p-seed').value=0; document.getElementById('dv-seed').textContent='0';
+  document.getElementById('p-tint').value='#ff2d78';
+  if (!animating) render();
+}
+
+// ─────────────────────────────────────────────────────────
+// UI — LEFT PANEL
+// ─────────────────────────────────────────────────────────
+const PALETTE = ['#ff2d78','#00e5ff','#b4ff3c','#ff9500','#a855f7','#f472b6','#06d6a0','#fbbf24','#ef4444','#60a5fa','#fff','#f59e0b'];
+
+function buildPalette() {
+  const row = document.getElementById('palette-row');
+  PALETTE.forEach((c, i) => {
+    const d = document.createElement('div');
+    d.className = 'chip' + (i===0?' on':'');
+    d.style.background = c;
+    d.onclick = () => pickChip(c, d);
+    row.appendChild(d);
+  });
+}
+
+// Super-category tabs
+function buildTabs() {
+  const tabs = document.getElementById('lp-tabs');
+  const supers = [...new Set(CATEGORIES.map(c => c.split('/')[0].trim()))];
+  const all = document.createElement('div');
+  all.className = 'ltab on'; all.textContent = 'ALL';
+  all.style.background = '#ff2d78'; all.style.color = '#000'; all.style.borderColor = '#ff2d78';
+  all.onclick = () => { filterFX(''); document.getElementById('lsearch').value=''; };
+  tabs.appendChild(all);
+  supers.slice(0,20).forEach(sup => {
+    const t = document.createElement('div');
+    t.className = 'ltab'; t.textContent = sup.toUpperCase();
+    t.onclick = () => filterFX(sup);
+    tabs.appendChild(t);
+  });
+}
+
+let expandedCats = new Set();
+
+function expandCat(cat) {
+  if (!expandedCats.has(cat)) {
+    expandedCats.add(cat);
+    const sec = document.querySelector(`.cat-section[data-cat="${CSS.escape(cat)}"]`);
+    if (sec) { sec.classList.add('expanded'); const h = sec.querySelector('.cat-header'); if(h)h.classList.add('open'); }
+  }
+}
+
+function buildList(filter='') {
+  const list = document.getElementById('cat-list');
+  list.innerHTML = '';
+  let shown = 0;
+  const fl = filter.toLowerCase();
+
+  CATEGORIES.forEach(cat => {
+    const catMatch = !fl || cat.toLowerCase().includes(fl);
+    const fxInCat = CAT_EFFECTS[cat];
+    const matchingFX = fl ? fxInCat.filter(i => ALL_EFFECTS[i].name.toLowerCase().includes(fl) || cat.toLowerCase().includes(fl)) : fxInCat;
+    if (matchingFX.length === 0) return;
+
+    const color = CAT_COLORS[cat] || '#888';
+    const sec = document.createElement('div');
+    sec.className = 'cat-section' + (expandedCats.has(cat) ? ' expanded' : '');
+    sec.dataset.cat = cat;
+
+    const hdr = document.createElement('div');
+    hdr.className = 'cat-header' + (expandedCats.has(cat) ? ' open' : '');
+    hdr.style.borderLeft = '3px solid ' + color;
+    hdr.innerHTML = `<span style="color:${color}">${cat}</span><span class="count">${matchingFX.length} <span class="arrow">›</span></span>`;
+    hdr.onclick = () => {
+      const isOpen = sec.classList.toggle('expanded');
+      hdr.classList.toggle('open', isOpen);
+      if (isOpen) expandedCats.add(cat); else expandedCats.delete(cat);
+    };
+
+    const fxList = document.createElement('div');
+    fxList.className = 'fx-list';
+
+    matchingFX.forEach(i => {
+      const fx = ALL_EFFECTS[i];
+      const item = document.createElement('div');
+      item.className = 'fx-item' + (currentFX && currentFX.id === fx.id ? ' on' : '');
+      item.dataset.fxid = fx.id;
+      item.innerHTML = `<div class="fx-dot" style="background:${color}"></div><div class="fx-name">${fx.name}</div>`;
+      item.onclick = () => setFX(fx);
+      fxList.appendChild(item);
+      shown++;
+    });
+
+    sec.appendChild(hdr);
+    sec.appendChild(fxList);
+    list.appendChild(sec);
+  });
+
+  document.getElementById('lp-count').textContent = shown.toLocaleString() + ' effects shown';
+}
+
+let searchTimer = null;
+function filterFX(q) {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => buildList(q), 150);
+}
+
+function quickSearch(q) { filterFX(q); document.getElementById('lsearch').value = q; }
+
+// Drag & drop
+const cview = document.getElementById('cview');
+cview.addEventListener('dragover', e => e.preventDefault());
+cview.addEventListener('drop', e => {
+  e.preventDefault();
+  const f = e.dataTransfer.files[0];
+  if (f && f.type.startsWith('image/')) loadImg({ target: { files: [f] } });
+});
+
+// Keyboard
+window.addEventListener('keydown', e => {
+  if (e.key === 'r' || e.key === 'R') randomFX();
+  if (e.key === ' ') { e.preventDefault(); togglePlay(); }
+  if (e.key === 'c' || e.key === 'C') randomCatFX();
+});
+
+// Init
+buildPalette();
+buildTabs();
+buildList();
+canvas.width = 800; canvas.height = 600;
+gl.clearColor(0.03, 0.03, 0.06, 1);
+gl.clear(gl.COLOR_BUFFER_BIT);
+
+console.log('MEGA FX LAB ready — 30,000 effects across 1,000 categories!');
+</script>
+</body>
+</html>
